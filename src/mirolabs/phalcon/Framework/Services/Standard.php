@@ -120,7 +120,7 @@ class Standard implements Services
     public function setTranslation($di)
     {
         $di->set('translation', [
-            'className' => 'Framework\Translation',
+            'className' => 'mirolabs\phalcon\Framework\Translation',
             'arguments' => [
                 ['type' => 'service', 'name' => 'dispatcher'],
                 ['type' => 'parameter', 'value' => $this->modulesPath]
