@@ -2,9 +2,10 @@
 
 namespace mirolabs\phalcon\Framework;
 
+use mirolabs\phalcon\Framework\Volt;
 use Phalcon\Mvc\ModuleDefinitionInterface;
 use Phalcon\Mvc\View;
-use Phalcon\Mvc\View\Engine\Volt;
+
 
 abstract class Module implements ModuleDefinitionInterface
 {
@@ -36,7 +37,8 @@ abstract class Module implements ModuleDefinitionInterface
             'compiledExtension' => $config['view']['compiledExtension'],
             'compiledSeparator' => $config['view']['compiledSeparator'],
             'stat' => $config['view']['stat'],
-            'compileAlways' => $config['view']['compileAlways']
+            'compileAlways' => $config['view']['compileAlways'],
+            'commonView' => $config['projectPath'] . 'common/views/'
         ]);
 
         $volt->getCompiler()->addFunction('trans', function ($resolvedArgs, $exprArgs) use ($di) {

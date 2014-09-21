@@ -41,6 +41,7 @@ class Standard implements Services
     {
         $config = new \stdClass();
         $config->data = Yaml::parse(file_get_contents($this->projectPath . 'config/config.yml'));
+        $config->data['projectPath'] = $this->projectPath;
 
         $di->set(
             'config',

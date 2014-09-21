@@ -21,10 +21,15 @@ class Translation
             $lang = 'pl';
         }
 
-        require $modules[$dispatcher->getModuleName()] . 'messages/' . $lang . '.php';
+        $config = $dispatcher->getDI()->get('config')->data;
+        $translations = $this->getMessages($config['projectPath'] . 'common/', $lang);
+        $translations = array_merge(
+            $translations,
+            $this->getMessages($modules[$dispatcher->getModuleName()], $lang)
+        );
 
         $this->translate =  new NativeArray([
-            'content' => $messages
+            'content' => $translations
         ]);
     }
 
@@ -33,5 +38,19 @@ class Translation
         return $this->translate->_($name);
     }
 
+    /**
+     * @param $dir
+     * @param $lang
+     * @return array
+     */
+    protected function getMessages($dir, $lang)
+    {
+        $file = $dir . 'messages/' . $lang . '.php';;
+        if (file_exists($file)) {
+            require $file;
+            return $messages;
+        }
 
+        return [];
+    }
 } 
