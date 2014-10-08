@@ -41,6 +41,14 @@ abstract class Module implements ModuleDefinitionInterface
             'commonView' => $config['projectPath'] . 'common/views/'
         ]);
 
+        $volt->getCompiler()->addFilter('raw', function($resolvedArgs, $exprArgs) {
+            return 'html_entity_decode(' . $resolvedArgs . ')';
+        });
+
+        $volt->getCompiler()->addFunction('lang', function () use ($di) {
+            return '$this->translation->getLang()';
+        });
+
         $volt->getCompiler()->addFunction('trans', function ($resolvedArgs, $exprArgs) use ($di) {
             return sprintf('$this->translation->__get(\'%s\')', $exprArgs[0]['expr']['value']);
         });

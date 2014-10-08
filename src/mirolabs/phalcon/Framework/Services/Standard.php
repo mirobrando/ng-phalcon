@@ -75,16 +75,19 @@ class Standard implements Services
     {
         $router = new Router();
         foreach ($this->modulesPath as $module=>$path) {
-            foreach (Yaml::parse(file_get_contents($path . 'config/route.yml')) as $r) {
-                $router->add(
-                    $r['pattern'],
-                    [
-                        'module' => $module,
-                        'controller' => $r['option']['controller'],
-                        'action' => $r['option']['action'],
-                    ],
-                    array_key_exists('method', $r)? $r['method'] : null
-                );
+            $data = Yaml::parse(file_get_contents($path . 'config/route.yml'));
+            if (is_array($data)) {
+                foreach ($data as $r) {
+                    $router->add(
+                        $r['pattern'],
+                        [
+                            'module' => $module,
+                            'controller' => $r['option']['controller'],
+                            'action' => $r['option']['action'],
+                        ],
+                        array_key_exists('method', $r) ? $r['method'] : null
+                    );
+                }
             }
         }
 

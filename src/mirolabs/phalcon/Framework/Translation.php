@@ -14,18 +14,23 @@ class Translation
      */
     private $translate;
 
+    /**
+     * @var string
+     */
+    private $lang;
+
     public function __construct(Dispatcher $dispatcher, array $modules)
     {
-        $lang = $dispatcher->getParam('language');
-        if (is_null($lang)) {
-            $lang = 'pl';
+        $this->lang = $dispatcher->getParam('language');
+        if (is_null($this->lang)) {
+            $this->lang = 'pl';
         }
 
         $config = $dispatcher->getDI()->get('config')->data;
-        $translations = $this->getMessages($config['projectPath'] . 'common/', $lang);
+        $translations = $this->getMessages($config['projectPath'] . 'common/');
         $translations = array_merge(
             $translations,
-            $this->getMessages($modules[$dispatcher->getModuleName()], $lang)
+            $this->getMessages($modules[$dispatcher->getModuleName()])
         );
 
         $this->translate =  new NativeArray([
@@ -33,19 +38,32 @@ class Translation
         ]);
     }
 
+    /**
+     * @param $name
+     *
+     * @return string
+     */
     public function __get($name)
     {
         return $this->translate->_($name);
     }
 
     /**
+     * @return string
+     */
+    public function getLang()
+    {
+        return $this->lang;
+    }
+
+    /**
      * @param $dir
-     * @param $lang
+     *
      * @return array
      */
-    protected function getMessages($dir, $lang)
+    protected function getMessages($dir)
     {
-        $file = $dir . 'messages/' . $lang . '.php';;
+        $file = $dir . 'messages/' . $this->lang . '.php';;
         if (file_exists($file)) {
             require $file;
             return $messages;

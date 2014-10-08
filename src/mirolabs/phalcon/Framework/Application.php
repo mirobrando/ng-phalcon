@@ -49,7 +49,6 @@ class Application extends \Phalcon\Mvc\Application
             $this->loadServices();
             echo $this->handle()->getContent();
         } catch (Phalcon\Mvc\Dispatcher\Exception $e) {
-            var_dump($e);die;
             $response = new \Phalcon\Http\Response();
             $response->setStatusCode(400, 'Bad Request');
             $response->send();
