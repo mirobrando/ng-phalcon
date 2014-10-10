@@ -16,9 +16,12 @@ class Application extends \Phalcon\Mvc\Application
 
     private $projectPath;
 
-    public function __construct($projectPath)
+    private $dev;
+
+    public function __construct($projectPath, $dev = true)
     {
         $this->projectPath = $projectPath;
+        $this->dev = $dev;
         parent::__construct();
     }
 
@@ -30,7 +33,7 @@ class Application extends \Phalcon\Mvc\Application
 
     protected function loadServices()
     {
-        $services = new Standard($this->projectPath, $this->modules);
+        $services = new Standard($this->projectPath, $this->modules, $this->dev);
         $di = $services->createContainer();
         $services->registerUserServices($di);
         $services->setDb($di);
