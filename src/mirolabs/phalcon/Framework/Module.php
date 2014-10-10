@@ -9,6 +9,10 @@ use Phalcon\Mvc\View;
 
 abstract class Module implements ModuleDefinitionInterface
 {
+    const CONFIG = 'config/services.yml';
+    const COMMON = 'common';
+    const COMMON_CACHE =  'common/cache';
+
     protected $modulePath = '/';
 
     protected $moduleNamespace = '\\';

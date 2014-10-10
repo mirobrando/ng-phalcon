@@ -32,13 +32,12 @@ class Application extends \Phalcon\Mvc\Application
     {
         $services = new Standard($this->projectPath, $this->modules);
         $di = $services->createContainer();
-        $services->setConfig($di);
+        $services->registerUserServices($di);
         $services->setDb($di);
         $services->setRouter($di);
         $services->setUrl($di);
         $services->setSession($di);
         $services->setTranslation($di);
-        $services->registerOtherServices($di);
         $this->setDI($di);
     }
 

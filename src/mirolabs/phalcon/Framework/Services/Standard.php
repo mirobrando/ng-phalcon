@@ -1,6 +1,10 @@
 <?php
 namespace mirolabs\phalcon\Framework\Services;
 
+use mirolabs\phalcon\Framework\Container\Check;
+use mirolabs\phalcon\Framework\Container\Load;
+use mirolabs\phalcon\Framework\Container\Parser;
+use mirolabs\phalcon\Framework\Module;
 use mirolabs\phalcon\Framework\Services;
 use Phalcon\Mvc\Router;
 use Phalcon\Mvc\Url as UrlResolver;
@@ -15,8 +19,11 @@ class Standard implements Services
 
     private $projectPath;
 
-    public function __construct($projectPath, array $modules)
+    private  $dev;
+
+    public function __construct($projectPath, array $modules, $dev = true)
     {
+        $this->dev = $dev;
         $this->projectPath = $projectPath;
         foreach($modules as $moduleName => $module) {
             preg_match('/([a-z\/-]+)Module\.php/',$module['path'], $matches);
@@ -37,31 +44,19 @@ class Standard implements Services
      * @param \Phalcon\DI\FactoryDefault $di
      * @return void
      */
-    public function setConfig($di)
+    public function setDb(FactoryDefault $di)
     {
-        $config = new \stdClass();
-        $config->data = Yaml::parse(file_get_contents($this->projectPath . 'config/config.yml'));
-        $config->data['projectPath'] = $this->projectPath;
+        if($di->has('db')) {
+            return;
+        }
 
-        $di->set(
-            'config',
-            $config
-        );
-    }
-
-    /**
-     * @param \Phalcon\DI\FactoryDefault $di
-     * @return void
-     */
-    public function setDb($di)
-    {
-        $config = $di->get('config')->data;
+        $config = $di->get('config');
         $di->set('db', function() use ($config) {
             return new DbAdapter([
-                'host' => $config['database']['host'],
-                'username' => $config['database']['username'],
-                'password' => $config['database']['password'],
-                'dbname' => $config['database']['name']
+                'host' => $config->database['host'],
+                'username' => $config->database['username'],
+                'password' => $config->database['password'],
+                'dbname' => $config->database['name']
             ]);
 
         });
@@ -73,6 +68,10 @@ class Standard implements Services
      */
     public function setRouter($di)
     {
+        if($di->has('router')) {
+            return;
+        }
+
         $router = new Router();
         foreach ($this->modulesPath as $module=>$path) {
             $data = Yaml::parse(file_get_contents($path . 'config/route.yml'));
@@ -100,6 +99,10 @@ class Standard implements Services
      */
     public function setUrl($di)
     {
+        if($di->has('url')) {
+            return;
+        }
+
         $url = new UrlResolver();
         $url->setBaseUri('/');
 
@@ -112,6 +115,10 @@ class Standard implements Services
      */
     public function setSession($di)
     {
+        if($di->has('session')) {
+            return;
+        }
+
         $session = new SessionAdapter();
         $session->start();
         $di->set('session', $session);
@@ -123,6 +130,10 @@ class Standard implements Services
      */
     public function setTranslation($di)
     {
+        if($di->has('translation')) {
+            return;
+        }
+
         $di->set('translation', [
             'className' => 'mirolabs\phalcon\Framework\Translation',
             'arguments' => [
@@ -137,15 +148,20 @@ class Standard implements Services
      * @param \Phalcon\DI\FactoryDefault $di
      * @return void
      */
-    public function registerOtherServices($di)
+    public function registerUserServices($di)
     {
-        foreach ($this->modulesPath as $module => $path) {
-            $services = Yaml::parse(file_get_contents($path . 'config/services.yml'));
-            if (!is_null($services['services'])) {
-                foreach ($services['services'] as $serviceName => $params) {
-                    $di->set($serviceName, $params);
-                }
-            }
+        $cacheDir = $this->projectPath .'/' . Module::COMMON_CACHE;
+        $check = new Check($this->modulesPath, $cacheDir);
+        if ($this->dev || !$check->isCacheExist()) {
+            $parser = new Parser(
+                $this->modulesPath,
+                $this->projectPath . '/' . Module::CONFIG,
+                $cacheDir
+            );
+            $parser->execute();
         }
+
+        $load = new Load($cacheDir);
+        $load->execute($di);
     }
 } 

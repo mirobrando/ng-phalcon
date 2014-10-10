@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by IntelliJ IDEA.
- * User: miras
- * Date: 18.09.14
- * Time: 19:30
- */
 
 namespace mirolabs\phalcon\Framework;
 

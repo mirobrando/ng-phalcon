@@ -14,12 +14,6 @@ interface Services
      * @param \Phalcon\DI\FactoryDefault $di
      * @return void
      */
-    public function setConfig($di);
-
-    /**
-     * @param \Phalcon\DI\FactoryDefault $di
-     * @return void
-     */
     public function setDb($di);
 
     /**
@@ -50,6 +44,6 @@ interface Services
      * @param \Phalcon\DI\FactoryDefault $di
      * @return void
      */
-    public function registerOtherServices($di);
+    public function registerUserServices($di);
 
 }
