@@ -5,6 +5,7 @@ namespace mirolabs\phalcon\Framework\Container;
 
 use mirolabs\phalcon\Framework\Container\Parser\Factory;
 use mirolabs\phalcon\Framework\Container\Parser\Standard;
+use mirolabs\phalcon\Framework\Module;
 use Symfony\Component\Yaml\Yaml;
 
 class Parser implements Output
@@ -51,19 +52,25 @@ class Parser implements Output
     public function execute()
     {
         foreach ($this->modulesPath as $modulePath) {
-            $serviceFile = $modulePath . '/' . Module::CONFIG;
+            $serviceFile = $modulePath . '/' . Module::SERVICE;
             $data = Yaml::parse($serviceFile);
             $this->parseParam($data['parameters']);
-            $this->parseServices($data['services']);
         }
-
         $config = Yaml::parse($this->configPath);
         if (is_array($config)) {
             $this->parseParam($config);
         }
+
+        foreach ($this->modulesPath as $modulePath) {
+            $serviceFile = $modulePath . '/' . Module::SERVICE;
+            $data = Yaml::parse($serviceFile);
+            $this->parseServices($data['services']);
+        }
+
+
         $this->createFile();
         $this->saveParams();
-
+        $this->saveServices();
     }
 
     /**
@@ -71,13 +78,17 @@ class Parser implements Output
      */
     private function parseParam($params)
     {
-        $this->parameters = array_merge($this->parameters, $params);
+        if(is_array($params)) {
+            $this->parameters = array_merge($this->parameters, $params);
+        }
     }
 
     private function parseServices($services)
     {
-        foreach ($services as $serviceName => $serviceParam) {
-            $this->parseServiceParam($serviceName, $serviceParam);
+        if(is_array($services)) {
+            foreach ($services as $serviceName => $serviceParam) {
+                $this->parseServiceParam($serviceName, $serviceParam);
+            }
         }
     }
 
@@ -108,7 +119,7 @@ class Parser implements Output
     {
         $result = $this->parseParameter($value);
         if (!is_null($result)) {
-            $result;
+            return $result;
         }
 
         return $value;
@@ -133,7 +144,7 @@ class Parser implements Output
 
         return [
             'type' => 'parameter',
-            'value' => $value
+            'value' => $v
         ];
     }
 
@@ -173,7 +184,8 @@ class Parser implements Output
         $this->writeLine("\t\t" . '$config = new \mirolabs\phalcon\Framework\Map;');
         $this->writeLine("\t\t" . '$di->set(\'config\',$config);');
         foreach ($this->parameters as $key => $value) {
-            $this->writeLine(sprintf("\t\t\$config->set('%s', '%s');", $key,$value));
+
+            $this->writeLine(sprintf("\t\t\$config->set('%s', '%s');", $key, json_encode($value)));
         }
         $this->writeLine("\t}\n");
     }

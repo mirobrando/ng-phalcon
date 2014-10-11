@@ -44,12 +44,11 @@ class Standard implements Services
      * @param \Phalcon\DI\FactoryDefault $di
      * @return void
      */
-    public function setDb(FactoryDefault $di)
+    public function setDb($di)
     {
         if($di->has('db')) {
             return;
         }
-
         $config = $di->get('config');
         $di->set('db', function() use ($config) {
             return new DbAdapter([
@@ -68,10 +67,6 @@ class Standard implements Services
      */
     public function setRouter($di)
     {
-        if($di->has('router')) {
-            return;
-        }
-
         $router = new Router();
         foreach ($this->modulesPath as $module=>$path) {
             $data = Yaml::parse(file_get_contents($path . 'config/route.yml'));
@@ -99,10 +94,6 @@ class Standard implements Services
      */
     public function setUrl($di)
     {
-        if($di->has('url')) {
-            return;
-        }
-
         $url = new UrlResolver();
         $url->setBaseUri('/');
 
@@ -115,10 +106,6 @@ class Standard implements Services
      */
     public function setSession($di)
     {
-        if($di->has('session')) {
-            return;
-        }
-
         $session = new SessionAdapter();
         $session->start();
         $di->set('session', $session);
@@ -153,15 +140,18 @@ class Standard implements Services
         $cacheDir = $this->projectPath .'/' . Module::COMMON_CACHE;
         $check = new Check($this->modulesPath, $cacheDir);
         if ($this->dev || !$check->isCacheExist()) {
-            $parser = new Parser(
-                $this->modulesPath,
-                $this->projectPath . '/' . Module::CONFIG,
-                $cacheDir
-            );
-            $parser->execute();
+            if($check->isChangeConfiguration()) {
+                $parser = new Parser(
+                    $this->modulesPath,
+                    $this->projectPath . '/' . Module::CONFIG,
+                    $cacheDir
+                );
+                $parser->execute();
+            }
         }
 
         $load = new Load($cacheDir);
         $load->execute($di);
+        $di->get('config')->set('projectPath', json_encode($this->projectPath));
     }
 } 

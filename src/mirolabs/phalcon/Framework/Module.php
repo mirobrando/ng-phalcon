@@ -9,7 +9,8 @@ use Phalcon\Mvc\View;
 
 abstract class Module implements ModuleDefinitionInterface
 {
-    const CONFIG = 'config/services.yml';
+    const CONFIG = 'config/config.yml';
+    const SERVICE = 'config/services.yml';
     const COMMON = 'common';
     const COMMON_CACHE =  'common/cache';
 
@@ -31,18 +32,18 @@ abstract class Module implements ModuleDefinitionInterface
      */
     public function registerServices($di)
     {
-        $config = $di->get('config')->data;
+        $config = $di->get('config');
 
         $view = new View();
         $view->setViewsDir($this->modulePath . '/views/');
         $volt = new Volt($view, $di);
         $volt->setOptions([
-            'compiledPath' => $config['view']['compiledPath'],
-            'compiledExtension' => $config['view']['compiledExtension'],
-            'compiledSeparator' => $config['view']['compiledSeparator'],
-            'stat' => $config['view']['stat'],
-            'compileAlways' => $config['view']['compileAlways'],
-            'commonView' => $config['projectPath'] . 'common/views/'
+            'compiledPath' => $config->view->compiledPath,
+            'compiledExtension' => $config->view->compiledExtension,
+            'compiledSeparator' => $config->view->compiledSeparator,
+            'stat' => $config->view->stat,
+            'compileAlways' => $config->view->compileAlways,
+            'commonView' => $config->projectPath . 'common/views/'
         ]);
 
         $volt->getCompiler()->addFilter('raw', function($resolvedArgs, $exprArgs) {

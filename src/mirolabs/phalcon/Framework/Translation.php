@@ -26,8 +26,8 @@ class Translation
             $this->lang = 'pl';
         }
 
-        $config = $dispatcher->getDI()->get('config')->data;
-        $translations = $this->getMessages($config['projectPath'] . 'common/');
+        $config = $dispatcher->getDI()->get('config');
+        $translations = $this->getMessages($config->projectPath . 'common/');
         $translations = array_merge(
             $translations,
             $this->getMessages($modules[$dispatcher->getModuleName()])

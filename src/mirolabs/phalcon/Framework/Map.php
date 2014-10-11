@@ -13,7 +13,7 @@ class Map
      */
     public function set($key, $value)
     {
-        $this->params[$key] = $value;
+        $this->params[$key] = json_decode($value);
     }
 
     /**
@@ -27,5 +27,10 @@ class Map
         }
 
         return null;
+    }
+
+    public function __get($name)
+    {
+        return $this->get($name);
     }
 } 

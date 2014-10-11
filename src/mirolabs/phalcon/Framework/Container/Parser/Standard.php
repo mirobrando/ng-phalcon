@@ -2,6 +2,8 @@
 
 namespace mirolabs\phalcon\Framework\Container\Parser;
 
+use mirolabs\phalcon\Framework\Container\Output;
+use mirolabs\phalcon\Framework\Container\ParserInterface;
 
 class Standard implements ParserInterface
 {
@@ -49,7 +51,7 @@ class Standard implements ParserInterface
             if ($arg['type'] == 'service') {
                 $key = 'name';
             }
-            $arg[] = sprintf(
+            $args[] = sprintf(
                 "\t\t\t\t['type' => '%s', '%s' => '%s']",
                 $arg['type'],
                 $key,

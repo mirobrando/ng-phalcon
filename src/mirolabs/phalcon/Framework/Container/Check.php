@@ -36,24 +36,24 @@ class Check
     public function isChangeConfiguration()
     {
         $data = $this->loadCache();
-        $result = true;
+        $result = false;
         try {
             foreach($this->modulesPath as $modulePath) {
-                $serviceFile = $modulePath . '/' . Module::CONFIG;
+                $serviceFile = $modulePath . '/' . Module::SERVICE;
                 $time = filemtime($serviceFile);
                 if (array_key_exists($serviceFile, $data)) {
-                    $result &= $time == $data[$serviceFile];
+                    $result |= $time != $data[$serviceFile];
                 } else {
-                    $result = false;
+                    $result = true;
                 }
                 $data[$serviceFile] = $time;
             }
 
         } catch (\Exception $e) {
-            $result = false;
+            $result = true;
         }
 
-        if (!$result) {
+        if ($result) {
             $this->saveCache($data);
         }
         return $result;
@@ -74,8 +74,11 @@ class Check
     private function loadCache()
     {
         try {
-            $data = file_get_contents($this->cacheDir . '/' . self::CACHE_FILE);
-            return json_decode($data);
+            if ($this->isCacheExist()) {
+                $data = file_get_contents($this->cacheDir . '/' . self::CACHE_FILE);
+                return unserialize($data);
+            }
+            return [];
         } catch (\Exception $e) {
             return [];
         }
@@ -87,7 +90,7 @@ class Check
     private function saveCache($data)
     {
         try {
-            file_put_contents($this->cacheDir . '/' . self::CACHE_FILE, $data);
+            file_put_contents($this->cacheDir . '/' . self::CACHE_FILE, serialize($data));
         } catch (\Exception $e) {
         }
     }
