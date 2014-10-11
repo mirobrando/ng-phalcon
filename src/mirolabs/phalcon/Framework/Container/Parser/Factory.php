@@ -56,16 +56,16 @@ class Factory implements ParserInterface
         $args = [];
         foreach ($this->arguments as $arg) {
             if ($arg['type'] == 'service') {
-                $args[] = sprintf("\t\t\t\t\$di->get('%s')", $arg['name']);
+                $args[] = sprintf("\$di->get('%s')", $arg['name']);
             } else {
-                $args[] = sprintf("\t\t\t\t\'%s'", $arg['value']);
+                $args[] = sprintf("'%s'", $arg['value']);
             }
         }
         $this->output->writeLine(sprintf(
             "\t\t\t return \$di->get('%s')->%s(%s);",
             $this->factoryClass,
             $this->factoryMethod,
-            implode(",\n", $args)
+            implode(",", $args)
         ));
         $this->output->writeLine("\t\t});");
     }
