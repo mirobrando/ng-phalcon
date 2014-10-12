@@ -47,7 +47,9 @@ class Standard implements Services
      */
     public function setListenerManager($di)
     {
-        $di->set('listener', new EventsManager());
+        $eventsManager = new EventsManager();
+        $di->set('listener', $eventsManager);
+        $di->get('dispatcher')->setEventsManager($eventsManager);
     }
 
 
