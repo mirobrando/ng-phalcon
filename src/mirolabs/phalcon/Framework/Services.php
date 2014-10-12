@@ -14,6 +14,12 @@ interface Services
      * @param \Phalcon\DI\FactoryDefault $di
      * @return void
      */
+    public function setListenerManager($di);
+
+    /**
+     * @param \Phalcon\DI\FactoryDefault $di
+     * @return void
+     */
     public function setDb($di);
 
     /**

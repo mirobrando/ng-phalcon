@@ -4,6 +4,7 @@ namespace mirolabs\phalcon\Framework\Container;
 
 
 use mirolabs\phalcon\Framework\Container\Parser\Factory;
+use mirolabs\phalcon\Framework\Container\Parser\Listener;
 use mirolabs\phalcon\Framework\Container\Parser\Standard;
 use mirolabs\phalcon\Framework\Module;
 use Symfony\Component\Yaml\Yaml;
@@ -94,7 +95,11 @@ class Parser implements Output
 
     private function parseServiceParam($serviceName, $serviceParam)
     {
-        if (array_key_exists('factory_service', $serviceParam)) {
+        if (array_key_exists('event_name', $serviceParam)) {
+            $parser = new Listener($this);
+            $parser->setEventName($serviceParam['event_name']);
+            $parser->setEventMethod($serviceParam['event_method']);
+        } else if (array_key_exists('factory_service', $serviceParam)) {
             $parser = new Factory($this);
             $parser->setFactoryClass($serviceParam['factory_service']);
             $parser->setFactoryMethod($serviceParam['factory_method']);

@@ -35,6 +35,7 @@ class Application extends \Phalcon\Mvc\Application
     {
         $services = new Standard($this->projectPath, $this->modules, $this->dev);
         $di = $services->createContainer();
+        $services->setListenerManager($di);
         $services->registerUserServices($di);
         $services->setDb($di);
         $services->setRouter($di);

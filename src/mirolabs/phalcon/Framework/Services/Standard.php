@@ -11,6 +11,7 @@ use Phalcon\Mvc\Url as UrlResolver;
 use Phalcon\DI\FactoryDefault;
 use Phalcon\Session\Adapter\Files as SessionAdapter;
 use Phalcon\Db\Adapter\Pdo\Mysql as DbAdapter;
+use Phalcon\Events\Manager as EventsManager;
 use Symfony\Component\Yaml\Yaml;
 
 class Standard implements Services
@@ -39,6 +40,16 @@ class Standard implements Services
     {
         return new FactoryDefault();
     }
+
+    /**
+     * @param \Phalcon\DI\FactoryDefault $di
+     * @return void
+     */
+    public function setListenerManager($di)
+    {
+        $di->set('listener', new EventsManager());
+    }
+
 
     /**
      * @param \Phalcon\DI\FactoryDefault $di
