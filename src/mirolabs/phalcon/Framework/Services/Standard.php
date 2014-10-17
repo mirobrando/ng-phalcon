@@ -27,7 +27,7 @@ class Standard implements Services
         $this->dev = $dev;
         $this->projectPath = $projectPath;
         foreach($modules as $moduleName => $module) {
-            preg_match('/([a-z\/-]+)Module\.php/',$module['path'], $matches);
+            preg_match('/([A-Za-z\/-]+)Module\.php/',$module['path'], $matches);
             $this->modulesPath[$moduleName] = $projectPath . $matches[1];
         }
     }

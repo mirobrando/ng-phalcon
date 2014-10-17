@@ -58,6 +58,10 @@ abstract class Module implements ModuleDefinitionInterface
             return sprintf('$this->translation->__get(\'%s\')', $exprArgs[0]['expr']['value']);
         });
 
+        $volt->getCompiler()->addFunction('ng', function($input) {
+            return '"{{".' . $input . '."}}"';
+        });
+
         $view->registerEngines([
             ".volt" => $volt
         ]);
