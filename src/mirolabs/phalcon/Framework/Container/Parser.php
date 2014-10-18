@@ -12,7 +12,7 @@ use Symfony\Component\Yaml\Yaml;
 class Parser implements Output
 {
     const CACHE_FILE = 'container.php';
-
+    const CACHE_TASKS = '.task.log';
     /**
      * @var string
      */
@@ -37,6 +37,11 @@ class Parser implements Output
      * @var array
      */
     private $servicesData = [];
+
+    /**
+     * @var array
+     */
+    private $tasks = [];
 
     /**
      * @param string $modulesPath
@@ -66,12 +71,16 @@ class Parser implements Output
             $serviceFile = $modulePath . '/' . Module::SERVICE;
             $data = Yaml::parse($serviceFile);
             $this->parseServices($data['services']);
+            if (array_key_exists('tasks', $data)) {
+                $this->parseTasks($data['tasks']);
+            }
         }
 
 
         $this->createFile();
         $this->saveParams();
         $this->saveServices();
+        $this->saveTasks();
     }
 
     /**
@@ -82,6 +91,31 @@ class Parser implements Output
         if(is_array($params)) {
             $this->parameters = array_merge($this->parameters, $params);
         }
+    }
+
+    private function parseTasks($tasks)
+    {
+        if(is_array($tasks)) {
+            foreach ($tasks as $taskName => $taskParams) {
+                $this->parseTasksParam($taskName, $taskParams);
+            }
+        }
+    }
+
+    private function parseTasksParam($taskName, $taskParams)
+    {
+        $task['class'] = $this->getClassValue($taskParams['class']);
+        $task['action'] = $this->getClassValue($taskParams['action']);
+        $task['description'] = '';
+        if( array_key_exists('description', $taskParams) ) {
+            $task['description'] =  $taskParams['description'];
+        }
+        $task['params'] = [];
+
+        foreach ($taskParams['arguments'] as $argument) {
+            $task['params'][] = $this->getArgumentsValue($argument);
+        }
+        $this->tasks[$taskName] = $task;
     }
 
     private function parseServices($services)
@@ -204,6 +238,11 @@ class Parser implements Output
             $parser->writeDefinition();
         }
         $this->writeLine("\t}\n");
+    }
+
+    private function saveTasks()
+    {
+        file_put_contents($this->cacheDir . '/' . self::CACHE_TASKS, serialize($this->tasks));
     }
 
     private function createFile()

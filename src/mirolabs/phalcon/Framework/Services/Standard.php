@@ -16,7 +16,7 @@ use Symfony\Component\Yaml\Yaml;
 
 class Standard implements Services
 {
-    private $modulesPath = array();
+    protected $modulesPath = array();
 
     private $projectPath;
 
