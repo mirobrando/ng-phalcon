@@ -29,7 +29,7 @@ class ProjectTask extends Task
 
     public function createModuleAction($params)
     {
-        $projectPath = $params[1];
+        $projectPath = $params[0];
         $name = '';
         while($name == '') {
             $name = $this->input()->getAnswer('Enter the name of the module');
@@ -53,9 +53,9 @@ class ProjectTask extends Task
         chmod($moduleDir . '/'. self::CONFIG_DIR . '/route.yml', 0777);
 
         file_put_contents($moduleDir . '/'. self::CONFIG_DIR . '/services.yml', "# services.yml\n");
-        file_put_contents($moduleDir . '/'. self::CONFIG_DIR . '/services.yml', "parameters\n\n", FILE_APPEND);
-        file_put_contents($moduleDir . '/'. self::CONFIG_DIR . '/services.yml', "services\n\n", FILE_APPEND);
-        file_put_contents($moduleDir . '/'. self::CONFIG_DIR . '/services.yml', "tasks\n\n", FILE_APPEND);
+        file_put_contents($moduleDir . '/'. self::CONFIG_DIR . '/services.yml', "parameters:\n\n", FILE_APPEND);
+        file_put_contents($moduleDir . '/'. self::CONFIG_DIR . '/services.yml', "services:\n\n", FILE_APPEND);
+        file_put_contents($moduleDir . '/'. self::CONFIG_DIR . '/services.yml', "tasks:\n\n", FILE_APPEND);
         chmod($moduleDir . '/'. self::CONFIG_DIR . '/services.yml', 0777);
 
         file_put_contents($moduleDir . '/'. self::TRANSLATE_DIR . '/en.php', "<?php\n\n");
@@ -68,15 +68,15 @@ class ProjectTask extends Task
         file_put_contents($moduleDir . '/Module.php', "{\n", FILE_APPEND);
         file_put_contents($moduleDir . '/Module.php', "\tpublic function __construct()\n", FILE_APPEND);
         file_put_contents($moduleDir . '/Module.php', "\t{\n", FILE_APPEND);
-        file_put_contents($moduleDir . '/Module.php', "\t\t$this->moduleNamespace =  __NAMESPACE__;\n", FILE_APPEND);
-        file_put_contents($moduleDir . '/Module.php', "\t\t$this->modulePath = __DIR__;\n", FILE_APPEND);
+        file_put_contents($moduleDir . '/Module.php', "\t\t" . '$this->moduleNamespace =  __NAMESPACE__;' . "\n", FILE_APPEND);
+        file_put_contents($moduleDir . '/Module.php', "\t\t" . '$this->modulePath = __DIR__;'. "\n", FILE_APPEND);
         file_put_contents($moduleDir . '/Module.php', "\t}\n", FILE_APPEND);
         file_put_contents($moduleDir . '/Module.php', "}\n", FILE_APPEND);
         chmod($moduleDir . '/Module.php', 0777);
 
         $answer = $this->input()->getAnswer('Do you want add module to project?', 'y', ['y', 'n']);
         if ($answer == 'y') {
-            file_put_contents($projectPath . '/config/modules.yml', "\n" . $name . "\n", FILE_APPEND);
+            file_put_contents($projectPath . '/config/modules.yml', "\n" . $name . ":\n", FILE_APPEND);
             file_put_contents($projectPath . '/config/modules.yml', "  className: " . $name . "\Module\n", FILE_APPEND);
             file_put_contents($projectPath . '/config/modules.yml', "  path: modules/" . $name . "/Module.php\n", FILE_APPEND);
         }
