@@ -50,7 +50,7 @@ class Console extends ConsoleApp
         $tasks = $this->getTaskList();
         $this->addStandardTask($tasks);
         if(count($this->args) < 2) {
-            $this->displayList($tasks);
+            return $this->getListTask($tasks);
         }
         if (!array_key_exists($this->args[1], $tasks)) {
             throw new Phalcon\Exception('command unavailable');
@@ -78,22 +78,26 @@ class Console extends ConsoleApp
             'class' => 'mirolabs\phalcon\Framework\Tasks\Project',
             'action' => 'createModule',
             'description' => 'createModule',
-            'params' => [$this->projectPath]
+            'params' => [
+                ['type' => 'parameter', 'value' => $this->projectPath]
+            ]
         ];
     }
 
 
     protected function getTaskList()
     {
-        return file_get_contents($this->projectPath . '/' . Module::COMMON_CACHE . '/' . Parser::CACHE_TASKS);
+        return unserialize(
+            file_get_contents($this->projectPath . '/' . Module::COMMON_CACHE . '/' . Parser::CACHE_TASKS)
+        );
     }
 
-    protected function displayList($tasks)
+    protected function getListTask($tasks)
     {
-        foreach($tasks as $name => $param) {
-            echo sprintf("%s - %s\n", $name, $param['description']);
-        }
-        exit(0);
+        $data['task'] = 'mirolabs\phalcon\Framework\Tasks\Project';
+        $data['task'] = 'list';
+        $data['params'] = ['tasks' => $tasks];
+        return $data;
     }
 
     protected function getArgumentsFromTask($task)

@@ -16,6 +16,7 @@
         "php": ">=5.4",
         "ext-phalcon": ">=1.2.4,<2",
         "symfony/yaml": "2.*",
-        "phalcon/incubator": "dev-master"
+        "phalcon/incubator": "dev-master" ,
+        "mirolabs/console-reader": "dev-master"
     }
 }
