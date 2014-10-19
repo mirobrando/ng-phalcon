@@ -95,7 +95,7 @@ class Console extends ConsoleApp
     protected function getListTask($tasks)
     {
         $data['task'] = 'mirolabs\phalcon\Framework\Tasks\Project';
-        $data['task'] = 'list';
+        $data['action'] = 'list';
         $data['params'] = ['tasks' => $tasks];
         return $data;
     }
