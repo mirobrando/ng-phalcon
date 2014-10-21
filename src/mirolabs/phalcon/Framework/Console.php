@@ -3,6 +3,7 @@
 namespace mirolabs\phalcon\Framework;
 
 use mirolabs\phalcon\Framework\Container\Parser;
+use mirolabs\phalcon\Framework\Tasks\DefaultCommands;
 use Phalcon\CLI\Console as ConsoleApp;
 use mirolabs\phalcon\Framework\Services\Console as ConsoleDi;
 use Symfony\Component\Yaml\Yaml;
@@ -48,7 +49,9 @@ class Console extends ConsoleApp
     protected function getArguments()
     {
         $tasks = $this->getTaskList();
-        $this->addStandardTask($tasks);
+        $defaultCommands = new DefaultCommands($this->getDI(), $this->modules, $this->projectPath);
+        $defaultCommands->addTasks($tasks);
+
         if(count($this->args) < 2) {
             return $this->getListTask($tasks);
         }
@@ -72,19 +75,6 @@ class Console extends ConsoleApp
     }
 
 
-    protected function addStandardTask(&$tasks)
-    {
-        $tasks['createModule'] = [
-            'class' => 'mirolabs\phalcon\Framework\Tasks\Project',
-            'action' => 'createModule',
-            'description' => 'createModule',
-            'params' => [
-                ['type' => 'parameter', 'value' => $this->projectPath]
-            ]
-        ];
-    }
-
-
     protected function getTaskList()
     {
         return unserialize(
@@ -94,8 +84,8 @@ class Console extends ConsoleApp
 
     protected function getListTask($tasks)
     {
-        $data['task'] = 'mirolabs\phalcon\Framework\Tasks\Project';
-        $data['action'] = 'list';
+        $data['task'] = 'mirolabs\phalcon\Framework\Tasks\CommandList';
+        $data['action'] = 'run';
         $data['params'] = ['tasks' => $tasks];
         return $data;
     }
