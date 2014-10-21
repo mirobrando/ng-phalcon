@@ -11,12 +11,12 @@ class InstallResourcesTask extends Task
     {
         $projectPath = $params[0];
         $modules = $params[1];
-        $publicDir = $projectPath . '/public';
+        $publicDir = $projectPath . 'public';
 
-        $this->installModule('common', $projectPath. '/common/resources', $publicDir);
+        $this->installModule('common', $projectPath. '/common', $publicDir);
 
         foreach($modules as $name=>$module) {
-            $this->installModule($name, $module['path'], $publicDir);
+            $this->installModule($name, $projectPath . dirname($module['path']), $publicDir);
         }
 
         $this->output()->writelnFormat('resources installed', 'info');
@@ -48,7 +48,7 @@ class InstallResourcesTask extends Task
     private function createSymLink($dir, $link)
     {
         if (is_dir($dir)) {
-            if (!is_dir($linkDir)) {
+            if (!is_dir($link)) {
                 symlink($dir, $link);
             }
 
