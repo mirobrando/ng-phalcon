@@ -26,7 +26,7 @@ class DefaultCommands
      * @param array $modules
      * @param string string $projectPath
      */
-    public function _construct(CliDI $di, $modules, $projectPath)
+    public function __construct(CliDI $di, $modules, $projectPath)
     {
         $this->di = $di;
         $this->modules = $modules;
@@ -61,10 +61,8 @@ class DefaultCommands
             'action' => 'run',
             'description' => 'create symlink for resources of modules',
             'params' => [
-                [
-                    ['type' => 'parameter', 'value' => $this->projectPath],
-                    ['type' => 'parameter', 'value' => $this->modules]
-                ]
+                ['type' => 'parameter', 'value' => $this->projectPath],
+                ['type' => 'parameter', 'value' => $this->modules]
             ]
         ];
     }

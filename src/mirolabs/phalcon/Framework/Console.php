@@ -48,6 +48,7 @@ class Console extends ConsoleApp
 
     protected function getArguments()
     {
+
         $tasks = $this->getTaskList();
         $defaultCommands = new DefaultCommands($this->getDI(), $this->modules, $this->projectPath);
         $defaultCommands->addTasks($tasks);

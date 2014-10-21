@@ -133,12 +133,18 @@ class Standard implements Services
         if($di->has('translation')) {
             return;
         }
+        $config = $di->get('config');
+        $lang = $config->get('default.lang');
+        if (empty($lang)) {
+            $lang = 'en';
+        }
 
         $di->set('translation', [
             'className' => 'mirolabs\phalcon\Framework\Translation',
             'arguments' => [
                 ['type' => 'service', 'name' => 'dispatcher'],
-                ['type' => 'parameter', 'value' => $this->modulesPath]
+                ['type' => 'parameter', 'value' => $this->modulesPath],
+                ['type' => 'parameter', 'value' => $lang]
             ]
         ]);
     }

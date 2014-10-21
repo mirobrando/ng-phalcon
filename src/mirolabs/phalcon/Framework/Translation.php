@@ -19,11 +19,11 @@ class Translation
      */
     private $lang;
 
-    public function __construct(Dispatcher $dispatcher, array $modules)
+    public function __construct(Dispatcher $dispatcher, array $modules, $defaultLanguage = 'en')
     {
         $this->lang = $dispatcher->getParam('language');
         if (is_null($this->lang)) {
-            $this->lang = 'pl';
+            $this->lang = $defaultLanguage;
         }
 
         $config = $dispatcher->getDI()->get('config');
