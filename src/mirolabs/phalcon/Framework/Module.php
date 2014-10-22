@@ -71,6 +71,7 @@ abstract class Module implements ModuleDefinitionInterface
 
         $di->set('view', $view);
         $di->get('dispatcher')->setDefaultNamespace($this->moduleNamespace . "\controllers\\");
+        $view->ngAppName = $config->get('ng.app.name');
     }
 
 } 
