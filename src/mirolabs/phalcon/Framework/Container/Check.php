@@ -91,6 +91,7 @@ class Check
     {
         try {
             file_put_contents($this->cacheDir . '/' . self::CACHE_FILE, serialize($data));
+            chmod($this->cacheDir . '/' . self::CACHE_FILE, 0777);
         } catch (\Exception $e) {
         }
     }

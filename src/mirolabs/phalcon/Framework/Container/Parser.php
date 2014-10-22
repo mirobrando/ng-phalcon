@@ -243,11 +243,13 @@ class Parser implements Output
     private function saveTasks()
     {
         file_put_contents($this->cacheDir . '/' . self::CACHE_TASKS, serialize($this->tasks));
+        chmod($this->cacheDir . '/' . self::CACHE_TASKS, 0777);
     }
 
     private function createFile()
     {
         file_put_contents($this->cacheDir . '/' . self::CACHE_FILE, "<?php\n\n");
+        chmod($this->cacheDir . '/' . self::CACHE_FILE, 0777);
     }
 
     /**
