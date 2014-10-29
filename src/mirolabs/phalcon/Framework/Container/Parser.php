@@ -143,8 +143,10 @@ class Parser implements Output
 
         $parser->setServiceName($serviceName);
         $parser->setClassName($this->getClassValue($serviceParam['class']));
-        foreach ($serviceParam['arguments'] as $argument) {
-            $parser->addArgument($this->getArgumentsValue($argument));
+        if (array_key_exists('arguments', $serviceParam) && is_array($serviceParam['arguments'])) {
+            foreach ($serviceParam['arguments'] as $argument) {
+                $parser->addArgument($this->getArgumentsValue($argument));
+            }
         }
         $this->servicesData[] = $parser;
     }

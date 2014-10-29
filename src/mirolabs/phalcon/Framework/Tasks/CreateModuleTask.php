@@ -137,7 +137,7 @@ class CreateModuleTask extends Task
     {
         $answer = $this->input()->getAnswer('Do you want add module to project?', 'y', ['y', 'n']);
         if ($answer == 'y') {
-            $this->writeLine($projectPath . '/config/modules.yml', "\n" . $moduleName);
+            $this->writeLine($projectPath . '/config/modules.yml', "\n" . $moduleName . ':');
             $this->writeLine($projectPath . '/config/modules.yml', "  className: " . $moduleName . '\\Module\\');
             $this->writeLine($projectPath . '/config/modules.yml', "  path: modules/" . $moduleName . "/Module.php");
         }
