@@ -7,8 +7,8 @@
         }
     ],
     "autoload": {
-        "psr-0": {
-            "mirolabs": "./src/"
+        "psr-4": {
+            "mirolabs\\phalcon\\Framework\\": "Framework/"
         }
     },
     "minimum-stability": "dev",
@@ -17,5 +17,11 @@
         "ext-phalcon": ">=1.2.4,<2",
         "symfony/yaml": "2.*",
         "mirolabs/console-reader": "dev-master"
+    },
+    "scripts": {
+        "post-create-project-cmd": [
+            "mirolabs\\phalcon\\Framework\\Install::createProject"
+        ]
     }
+
 }
