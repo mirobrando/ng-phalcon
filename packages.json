@@ -3,7 +3,7 @@
         "name": "mirolabs/ng-phalcon",
         "version": "dev-master",
         "source": {
-            "url": "/git@github.com:mirobrando/ng-phalcon.git",
+            "url": "git@github.com:mirobrando/ng-phalcon.git",
             "type": "git",
             "reference": "master"
         }
