@@ -1,0 +1,8 @@
+{
+    "name": "mirolabs/ng-phalcon",
+    "version": "dev",
+    "repository": {
+        "url": "git@github.com:mirobrando/ng-phalcon.git",
+        "type": "git"
+    }
+}
