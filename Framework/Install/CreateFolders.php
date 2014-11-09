@@ -9,19 +9,19 @@ class CreateFolders
     {
         $folder = getcwd();
 
-        mkdir($folder . '/common/cache', 777);
-        mkdir($folder . '/common/resources', 755);
-        mkdir($folder . '/common/resources/css', 755);
-        mkdir($folder . '/common/resources/img', 755);
-        mkdir($folder . '/common/resources/js', 755);
-        mkdir($folder . '/common/resources/ng-views', 755);
+        mkdir($folder . '/common/cache', 0777);
+        mkdir($folder . '/common/resources', 0755);
+        mkdir($folder . '/common/resources/css', 0755);
+        mkdir($folder . '/common/resources/img', 0755);
+        mkdir($folder . '/common/resources/js', 0755);
+        mkdir($folder . '/common/resources/ng-views', 0755);
 
-        mkdir($folder . '/modules', 755);
+        mkdir($folder . '/modules', 0755);
 
-        mkdir($folder . '/public/css', 755);
-        mkdir($folder . '/public/img', 755);
-        mkdir($folder . '/public/js', 755);
-        mkdir($folder . '/public/views', 755);
+        mkdir($folder . '/public/css', 0755);
+        mkdir($folder . '/public/img', 0755);
+        mkdir($folder . '/public/js', 0755);
+        mkdir($folder . '/public/views', 0755);
     }
 
 
