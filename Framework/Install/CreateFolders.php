@@ -7,6 +7,6 @@ class CreateFolders
 {
     public static function execute()
     {
-        var_dump(getcwd());
+        echo "getcwd: " . var_dump(getcwd());
     }
 } 
