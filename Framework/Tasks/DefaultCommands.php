@@ -67,4 +67,16 @@ class DefaultCommands
         ];
     }
 
+
+    public function _addCreateController(&$tasks)
+    {
+        $tasks['createController'] = [
+            'class' => 'mirolabs\phalcon\Framework\Tasks\CreateController',
+            'action' => 'run',
+            'description' => 'create controller in project',
+            'params' => [
+                ['type' => 'parameter', 'value' => $this->projectPath],
+            ]
+        ];
+    }
 }
