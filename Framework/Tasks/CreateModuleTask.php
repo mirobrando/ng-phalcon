@@ -35,7 +35,7 @@ class CreateModuleTask extends Task
     }
 
 
-    public function addModule($projectPath, $moduleName)
+    public function addModule($projectPath, $moduleName, $check = true)
     {
         $moduleDir = $projectPath . '/' . self::MODULES_DIR . '/' . $moduleName;
         $this->createDirs($moduleDir);
@@ -43,7 +43,7 @@ class CreateModuleTask extends Task
         $this->createServices($moduleDir . '/'. self::CONFIG_DIR);
         $this->createTranslate($moduleDir . '/'. self::TRANSLATE_DIR);
         $this->createModule($moduleDir, $moduleName);
-        $this->addModuleToProject($projectPath, $moduleName);
+        $this->addModuleToProject($projectPath, $moduleName, $check);
     }
 
 
@@ -139,10 +139,12 @@ class CreateModuleTask extends Task
     }
 
 
-    private function addModuleToProject($projectPath, $moduleName)
+    private function addModuleToProject($projectPath, $moduleName, $check)
     {
-        $answer = $this->input()->getAnswer('Do you want add module to project?', 'y', ['y', 'n']);
-        if ($answer == 'y') {
+        if ($check) {
+            $answer = $this->input()->getAnswer('Do you want add module to project?', 'y', ['y', 'n']);
+        }
+        if (!$check || $answer == 'y') {
             $this->writeLine($projectPath . '/config/modules.yml', "\n" . $moduleName . ':');
             $this->writeLine($projectPath . '/config/modules.yml', "  className: " . $moduleName . '\\Module\\');
             $this->writeLine($projectPath . '/config/modules.yml', "  path: modules/" . $moduleName . "/Module.php");

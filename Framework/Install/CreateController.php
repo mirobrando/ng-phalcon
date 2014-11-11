@@ -12,7 +12,7 @@ class CreateController
     {
         $projectPath = getcwd();
         $cModule = new CreateModuleTask();
-        $cModule->addModule($projectPath, 'demo');
+        $cModule->addModule($projectPath, 'demo', false);
 
         $cController = new CreateControllerTask();
         $cController->createController($projectPath, 'demo', 'Default', ['hello' => '/']);
@@ -23,7 +23,7 @@ class CreateController
 
     private static function createView($projectPath)
     {
-        $templatePath = $projectPath . '/modules/demo/views/default/hello.volt';
+        $templatePath = $projectPath . '/modules/demo/views/Default/hello.volt';
         file_put_contents($templatePath, "\n\n{% block content %}\n", FILE_APPEND);
         file_put_contents($templatePath, "<p>ng-phalcon start!</p>\n", FILE_APPEND);
         file_put_contents($templatePath, "\n\n{% endblock %}\n", FILE_APPEND);
