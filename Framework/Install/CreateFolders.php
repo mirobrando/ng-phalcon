@@ -10,11 +10,8 @@ class CreateFolders
         $folder = getcwd();
 
         mkdir($folder . '/common/cache', 0777);
-        mkdir($folder . '/common/resources', 0755);
         mkdir($folder . '/common/resources/css', 0755);
         mkdir($folder . '/common/resources/img', 0755);
-        mkdir($folder . '/common/resources/js', 0755);
-        mkdir($folder . '/common/resources/ng-views', 0755);
 
         mkdir($folder . '/modules', 0755);
 
