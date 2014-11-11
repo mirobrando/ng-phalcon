@@ -31,6 +31,12 @@ class CreateModuleTask extends Task
         if ($moduleName === false) {
             return;
         }
+        $this->addModule($projectPath, $moduleName);
+    }
+
+
+    public function addModule($projectPath, $moduleName)
+    {
         $moduleDir = $projectPath . '/' . self::MODULES_DIR . '/' . $moduleName;
         $this->createDirs($moduleDir);
         $this->createRoute($moduleDir . '/'. self::CONFIG_DIR);
@@ -38,8 +44,8 @@ class CreateModuleTask extends Task
         $this->createTranslate($moduleDir . '/'. self::TRANSLATE_DIR);
         $this->createModule($moduleDir, $moduleName);
         $this->addModuleToProject($projectPath, $moduleName);
-
     }
+
 
 
     private function getModuleName($projectPath)

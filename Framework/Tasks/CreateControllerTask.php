@@ -21,6 +21,8 @@ class CreateControllerTask extends Task
 
     public function createController($projectPath, $moduleName, $controllerName, $actions)
     {
+        mkdir($this->getModulePath($projectPath, $moduleName) . '/views/' . $controllerName);
+
         $controllerPath = $this->getControllerPath($projectPath, $moduleName, $controllerName);
         file_put_contents($controllerPath, "<?php\n\n");
         file_put_contents($controllerPath, sprintf("namespace %s\\controllers;\n\n", $moduleName), FILE_APPEND);
@@ -37,7 +39,7 @@ class CreateControllerTask extends Task
         file_put_contents($controllerPath, "}\n", FILE_APPEND);
     }
 
-    public function addAction($projectPath, $moduleName, $controllerName, $actionName, $route)
+    private function addAction($projectPath, $moduleName, $controllerName, $actionName, $route)
     {
         $controllerPath = $this->getControllerPath($projectPath, $moduleName, $controllerName);
         $routePath = $this->getRoutePath($projectPath, $moduleName);
@@ -50,11 +52,17 @@ class CreateControllerTask extends Task
         file_put_contents($controllerPath, "\t{\n\n", FILE_APPEND);
         file_put_contents($controllerPath, "\t}\n\n", FILE_APPEND);
 
+        #route
         file_put_contents($routePath, sprintf("\n- pattern: %s\n", $route) , FILE_APPEND);
         file_put_contents($routePath, "  option:\n" , FILE_APPEND);
         file_put_contents($routePath, sprintf("    controller: %s\n", $controllerName) , FILE_APPEND);
         file_put_contents($routePath, sprintf("    action: %s\n", $actionName) , FILE_APPEND);
 
+        #view
+        $viewPath =
+            $this->getModulePath($projectPath, $moduleName)
+            . '/views/' . $controllerName . '/' . $actionName .'.volt';
+        file_put_contents($viewPath, '{% extends "index.volt" %}');
     }
 
 
@@ -62,14 +70,22 @@ class CreateControllerTask extends Task
     {
         $name = '';
         while($name == '') {
-            $name = $this->input()->getAnswer('Enter the name of the module');
+            $modules = $this->getModules($projectPath);
+            if (empty($modules)) {
+                $this->output()->writelnFormat('project hasn\'t modules');
+                return false;
+            }
+
+            $name = $this->input()->getAnswer(
+                'Enter the name of the module', '', $modules);
         }
         $moduleDir = $this->getModulePath($projectPath, $name);
+
         if (file_exists($moduleDir)) {
             return $name;
         }
 
-        $this->output()->writeFormat('module isn\'t exists!', 'error');
+        $this->output()->writelnFormat('module isn\'t exists!', 'error');
         return false;
     }
 
@@ -79,7 +95,7 @@ class CreateControllerTask extends Task
         $name = '';
         while($name == '') {
             $name = $this->input()->getAnswer('Enter the name of the controller');
-            if (!preg_match('/Controller$/', $name)) {
+            if (preg_match('/Controller$/', $name)) {
                 $name = substr($name, 0 , strlen($name) -10);
             }
 
@@ -102,7 +118,7 @@ class CreateControllerTask extends Task
         $name = 'start';
         while($name != '') {
             $name = $this->input()->getAnswer('Enter the name of the action');
-            if (!preg_match('/Action/', $name)) {
+            if (preg_match('/Action/', $name)) {
                 $name = substr($name, 0 , strlen($name) -10);
             }
 
@@ -121,7 +137,7 @@ class CreateControllerTask extends Task
 
     private function getControllerPath($projectPath, $moduleName, $controllerName)
     {
-        return $this->getModulePath($projectPath, $moduleName) . '/controllers/' . $controllerName . 'Controller';
+        return $this->getModulePath($projectPath, $moduleName) . '/controllers/' . $controllerName . 'Controller.php';
     }
 
     private function getRoutePath($projectPath, $moduleName)
@@ -129,6 +145,20 @@ class CreateControllerTask extends Task
         return $projectPath . '/' .  CreateModuleTask::MODULES_DIR . '/' . $moduleName . '/config/route.yml';
     }
 
+    private function getModules($projectPath)
+    {
+        $modulesDir = $projectPath . '/' .  CreateModuleTask::MODULES_DIR . '/';
+        $modules = [];
+        if ($handle = opendir($modulesDir)) {
+            while (false !== ($module = readdir($handle))) {
+                if (!in_array($module, ['.', '..']) && is_dir($modulesDir . $module)) {
+                    $modules[] = $module;
+                }
+            }
+            closedir($handle);
+        }
 
+        return $modules;
+    }
 
 } 
