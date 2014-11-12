@@ -25,7 +25,8 @@ class CreateController
     {
         $templatePath = $projectPath . '/modules/demo/views/Default/hello.volt';
         file_put_contents($templatePath, "\n\n{% block content %}\n", FILE_APPEND);
-        file_put_contents($templatePath, "<p>ng-phalcon start!</p>\n", FILE_APPEND);
+        file_put_contents($templatePath, "<h1>Congratulations!</h1>\n", FILE_APPEND);
+        file_put_contents($templatePath, "<h4>You're now flying with ng-Phalcon.</h4>\n", FILE_APPEND);
         file_put_contents($templatePath, "\n\n{% endblock %}\n", FILE_APPEND);
     }
 } 
