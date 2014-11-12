@@ -29,7 +29,7 @@ class CreateControllerTask extends Task
         file_put_contents($controllerPath, "use Phalcon\\Mvc\\Controller;\n\n", FILE_APPEND);
         file_put_contents(
             $controllerPath,
-            sprintf("class %sController extends Controller\n", $controllerName),
+            sprintf("class %sController extends Controller\n", ucfirst($controllerName)),
             FILE_APPEND
         );
         file_put_contents($controllerPath, "{\n", FILE_APPEND);
@@ -137,7 +137,7 @@ class CreateControllerTask extends Task
 
     private function getControllerPath($projectPath, $moduleName, $controllerName)
     {
-        return $this->getModulePath($projectPath, $moduleName) . '/controllers/' . $controllerName . 'Controller.php';
+        return $this->getModulePath($projectPath, $moduleName) . '/controllers/' . ucfirst($controllerName) . 'Controller.php';
     }
 
     private function getRoutePath($projectPath, $moduleName)
