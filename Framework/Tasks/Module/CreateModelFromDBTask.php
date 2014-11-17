@@ -40,9 +40,7 @@ class CreateModelFromDBTask extends Module
     {
         try {
 
-            $classBuilder =  new ClassBuilder(
-                $modelFile = $this->createFileModel($projectPath, $moduleName, $tableName)
-            );
+            $classBuilder =  new ClassBuilder($this->createFileModel($projectPath, $moduleName, $tableName));
             $columns = $this->getDatabase()->describeColumns($tableName);
 
             $classBuilder
@@ -80,9 +78,9 @@ class CreateModelFromDBTask extends Module
     private function addColumnMap($columns, $classBuilder)
     {
         $body = ['return ['];
-        array_map(function($column, $body) {
+        foreach ($columns as $column) {
             $body[] = sprintf("\t'%s' => '%s',", $column->getName(), $this->getFieldName($column->getName()));
-        }, $columns, $body);
+        }
         $body[] = '];';
 
         $classBuilder->addMethod('columnMap', [], $body, 'array', 'public', ['Independent Column Mapping']);
@@ -101,7 +99,7 @@ class CreateModelFromDBTask extends Module
             $classBuilder->addMethod(
                 'get' . ucfirst($fieldName),
                 [],
-                [sprintf("return $this->%s;", $fieldName)],
+                [sprintf("return \$this->%s;", $fieldName)],
                 $this->getModelType($column->getType()),
                 'public'
             );
@@ -146,7 +144,7 @@ class CreateModelFromDBTask extends Module
     private function createFileModel($projectPath, $moduleName, $tableName)
     {
         $dirPath = $this->getModulePath($projectPath, $moduleName) . '/models';
-        $modelPath = $dirPath . '/' . $this->getModelName($tableName);
+        $modelPath = $dirPath . '/' . $this->getModelName($tableName) . '.php';
         $fileBuilder = new FileBuilder();
         $fileBuilder
             ->createFolder($dirPath)
@@ -177,7 +175,7 @@ class CreateModelFromDBTask extends Module
      */
     private function getFieldName($dbField)
     {
-        $data = explode('_', $tableName);
+        $data = explode('_', $dbField);
         $result = '';
         foreach ($data as $part) {
             $result .= ucfirst($part);

@@ -16,7 +16,7 @@ class ClassBuilder
      */
     public function __construct($fileName)
     {
-        $this->filename;
+        $this->filename = $fileName;
     }
 
     /**
@@ -125,7 +125,7 @@ class ClassBuilder
         foreach ($body as $line) {
             $this->writeLine("\t\t" . $line);
         }
-        $this->writeLine("\t}");
+        $this->writeLine("\t}\n");
     }
 
 
@@ -173,6 +173,6 @@ class ClassBuilder
      */
     protected function writeLine($line)
     {
-        file_put_contents($this->filename . "\n", $line, FILE_APPEND);
+        file_put_contents($this->filename, $line . "\n", FILE_APPEND);
     }
 } 
