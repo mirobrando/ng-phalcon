@@ -21,7 +21,7 @@ class CreateControllerTask extends Task
 
     public function createController($projectPath, $moduleName, $controllerName, $actions)
     {
-        mkdir($this->getModulePath($projectPath, $moduleName) . '/views/' . $controllerName);
+        mkdir($this->getModulePath($projectPath, $moduleName) . '/views/' . mb_strtolower($controllerName, 'UTF-8'));
 
         $controllerPath = $this->getControllerPath($projectPath, $moduleName, $controllerName);
         file_put_contents($controllerPath, "<?php\n\n");

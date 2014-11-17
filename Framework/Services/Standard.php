@@ -65,10 +65,10 @@ class Standard implements Services
         $config = $di->get('config');
         $di->set('db', function() use ($config) {
             return new DbAdapter([
-                'host' => $config->database['host'],
-                'username' => $config->database['username'],
-                'password' => $config->database['password'],
-                'dbname' => $config->database['name']
+                'host' => $config->database->host,
+                'username' => $config->database->username,
+                'password' => $config->database->password,
+                'dbname' => $config->database->dbname
             ]);
 
         });

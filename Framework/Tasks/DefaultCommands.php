@@ -79,4 +79,18 @@ class DefaultCommands
             ]
         ];
     }
+
+    private function _addCreateModelFromDB(&$tasks)
+    {
+        $tasks['createModelFromDB'] = [
+            'class' => 'mirolabs\phalcon\Framework\Tasks\Module\CreateModelFromDB',
+            'action' => 'run',
+            'description' => 'create model from database',
+            'params' => [
+                ['type' => 'parameter', 'value' => $this->projectPath],
+            ]
+        ];
+    }
+
+
 }
