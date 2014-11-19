@@ -40,13 +40,7 @@ class Check
         try {
             foreach ($this->modulesPath as $modulePath) {
                 $serviceFile = $modulePath . '/' . Module::SERVICE;
-                $time = filemtime($serviceFile);
-                if (array_key_exists($serviceFile, $data)) {
-                    $result |= $time != $data[$serviceFile];
-                } else {
-                    $result = true;
-                }
-                $data[$serviceFile] = $time;
+                $result |= $this->checkFile($serviceFile, $data);
             }
 
         } catch (\Exception $e) {
@@ -58,6 +52,27 @@ class Check
         }
         return $result;
     }
+
+
+    /**
+     * @param string $file
+     * @param array $data
+     * @return bool
+     */
+    private function checkFile($file,array &$data)
+    {
+        $result = true;
+        if (array_key_exists($file, $data)) {
+            $result = filemtime($file) != $data[$file];
+            $data[$file] = filemtime($file);
+        }
+
+        return $result;
+    }
+
+
+
+
 
     /**
      * @return bool

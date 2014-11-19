@@ -21,7 +21,6 @@ abstract class UnitTestCase extends PhalconTestCase {
     private $_loaded = false;
 
     public function setUp(Phalcon\DiInterface $di = NULL, Phalcon\Config $config = NULL) {
-
         // Load any additional services that might be required during testing
         $di = DI::getDefault();
 

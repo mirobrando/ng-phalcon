@@ -1,0 +1,1 @@
+vendor/bin/phpmd Framework/ text ruleset.xml

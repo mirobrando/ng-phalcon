@@ -57,16 +57,38 @@ class Parser implements Output
 
     public function execute()
     {
+        $this->createParameters();
+        $this->createServices();
+        $this->createFile();
+        $this->saveParams();
+        $this->saveServices();
+        $this->saveTasks();
+    }
+
+
+    /**
+     *
+     */
+    private function createParameters()
+    {
         foreach ($this->modulesPath as $modulePath) {
             $serviceFile = $modulePath . '/' . Module::SERVICE;
             $data = Yaml::parse($serviceFile);
             $this->parseParam($data['parameters']);
         }
+
         $config = Yaml::parse($this->configPath);
         if (is_array($config)) {
             $this->parseParam($config);
         }
+    }
 
+
+    /**
+     *
+     */
+    private function createServices()
+    {
         foreach ($this->modulesPath as $modulePath) {
             $serviceFile = $modulePath . '/' . Module::SERVICE;
             $data = Yaml::parse($serviceFile);
@@ -75,12 +97,6 @@ class Parser implements Output
                 $this->parseTasks($data['tasks']);
             }
         }
-
-
-        $this->createFile();
-        $this->saveParams();
-        $this->saveServices();
-        $this->saveTasks();
     }
 
     /**
@@ -129,6 +145,25 @@ class Parser implements Output
 
     private function parseServiceParam($serviceName, $serviceParam)
     {
+        $parser = $this->getParserInterface($serviceParam);
+
+        $parser->setServiceName($serviceName);
+        $parser->setClassName($this->getClassValue($serviceParam['class']));
+        if (array_key_exists('arguments', $serviceParam) && is_array($serviceParam['arguments'])) {
+            foreach ($serviceParam['arguments'] as $argument) {
+                $parser->addArgument($this->getArgumentsValue($argument));
+            }
+        }
+        $this->servicesData[] = $parser;
+    }
+
+
+    /**
+     * @param $serviceParam
+     * @return ParserInterface
+     */
+    private function getParserInterface($serviceParam)
+    {
         if (array_key_exists('event_name', $serviceParam)) {
             $parser = new Listener($this);
             $parser->setEventName($serviceParam['event_name']);
@@ -141,14 +176,7 @@ class Parser implements Output
             $parser = new Standard($this);
         }
 
-        $parser->setServiceName($serviceName);
-        $parser->setClassName($this->getClassValue($serviceParam['class']));
-        if (array_key_exists('arguments', $serviceParam) && is_array($serviceParam['arguments'])) {
-            foreach ($serviceParam['arguments'] as $argument) {
-                $parser->addArgument($this->getArgumentsValue($argument));
-            }
-        }
-        $this->servicesData[] = $parser;
+        return $parser;
     }
 
 
