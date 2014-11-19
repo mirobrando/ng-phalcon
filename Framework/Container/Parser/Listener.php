@@ -116,4 +116,4 @@ class Listener implements ParserInterface
     {
         $this->arguments[] = $argument;
     }
-} 
+}

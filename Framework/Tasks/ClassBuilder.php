@@ -47,7 +47,7 @@ class ClassBuilder
     public function createUses(array $uses)
     {
         foreach ($uses as $use) {
-           $this->writeLine(sprintf("use %s;", $use));
+            $this->writeLine(sprintf("use %s;", $use));
         }
         $this->writeLine('');
 
@@ -101,9 +101,14 @@ class ClassBuilder
     }
 
 
-    public function addMethod($name, array $params, array $body, $returnType = 'void',
-                              $availability = 'public', $annotations = [])
-    {
+    public function addMethod(
+        $name,
+        array $params,
+        array $body,
+        $returnType = 'void',
+        $availability = 'public',
+        $annotations = []
+    ) {
         if (!is_array($annotations)) {
             $annotations = [];
         }
@@ -119,7 +124,9 @@ class ClassBuilder
             "\t%s function %s(%s)",
             $availability,
             $name,
-            implode(', ', array_map(function($value) { return '$'.$value; }, array_keys($params)))
+            implode(', ', array_map(function ($value) {
+                return '$'.$value;
+            }, array_keys($params)))
         ));
         $this->writeLine("\t{");
         foreach ($body as $line) {
@@ -156,8 +163,11 @@ class ClassBuilder
         return '';
     }
 
-
-    private function createAnnotations($annotations = [], $tabs='')
+    /**
+     * @param array $annotations
+     * @param string $tabs
+     */
+    private function createAnnotations($annotations = [], $tabs = '')
     {
         $this->writeLine($tabs . '/**');
         if (is_array($annotations)) {
@@ -175,4 +185,4 @@ class ClassBuilder
     {
         file_put_contents($this->filename, $line . "\n", FILE_APPEND);
     }
-} 
+}

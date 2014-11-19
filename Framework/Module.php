@@ -6,7 +6,6 @@ use mirolabs\phalcon\Framework\Volt;
 use Phalcon\Mvc\ModuleDefinitionInterface;
 use Phalcon\Mvc\View;
 
-
 abstract class Module implements ModuleDefinitionInterface
 {
     const CONFIG = 'config/config.yml';
@@ -46,7 +45,7 @@ abstract class Module implements ModuleDefinitionInterface
             'commonView' => $config->projectPath . 'common/views/'
         ]);
 
-        $volt->getCompiler()->addFilter('raw', function($resolvedArgs, $exprArgs) {
+        $volt->getCompiler()->addFilter('raw', function ($resolvedArgs, $exprArgs) {
             return 'html_entity_decode(' . $resolvedArgs . ')';
         });
 
@@ -58,7 +57,7 @@ abstract class Module implements ModuleDefinitionInterface
             return sprintf('$this->translation->__get(\'%s\')', $exprArgs[0]['expr']['value']);
         });
 
-        $volt->getCompiler()->addFunction('ng', function($input) {
+        $volt->getCompiler()->addFunction('ng', function ($input) {
             return '"{{".' . $input . '."}}"';
         });
 
@@ -73,5 +72,4 @@ abstract class Module implements ModuleDefinitionInterface
         $di->get('dispatcher')->setDefaultNamespace($this->moduleNamespace . "\controllers\\");
         $view->ngAppName = $config->get('ng.app.name');
     }
-
-} 
+}

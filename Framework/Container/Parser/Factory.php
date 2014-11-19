@@ -92,7 +92,7 @@ class Factory implements ParserInterface
      */
     public function setFactoryClass($factoryClass)
     {
-       $this->factoryClass = $factoryClass;
+        $this->factoryClass = $factoryClass;
     }
 
     /**
@@ -110,5 +110,4 @@ class Factory implements ParserInterface
     {
         $this->arguments[] = $argument;
     }
-
-} 
+}

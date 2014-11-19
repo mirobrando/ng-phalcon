@@ -20,14 +20,14 @@ class Standard implements Services
 
     private $projectPath;
 
-    private  $dev;
+    private $dev;
 
     public function __construct($projectPath, array $modules, $dev = true)
     {
         $this->dev = $dev;
         $this->projectPath = $projectPath;
-        foreach($modules as $moduleName => $module) {
-            preg_match('/([A-Za-z\/-]+)Module\.php/',$module['path'], $matches);
+        foreach ($modules as $moduleName => $module) {
+            preg_match('/([A-Za-z\/-]+)Module\.php/', $module['path'], $matches);
             $this->modulesPath[$moduleName] = $projectPath . $matches[1];
         }
     }
@@ -59,11 +59,11 @@ class Standard implements Services
      */
     public function setDb($di)
     {
-        if($di->has('db')) {
+        if ($di->has('db')) {
             return;
         }
         $config = $di->get('config');
-        $di->set('db', function() use ($config) {
+        $di->set('db', function () use ($config) {
             return new DbAdapter([
                 'host' => $config->database->host,
                 'username' => $config->database->username,
@@ -81,7 +81,7 @@ class Standard implements Services
     public function setRouter($di)
     {
         $router = new Router();
-        foreach ($this->modulesPath as $module=>$path) {
+        foreach ($this->modulesPath as $module => $path) {
             $data = Yaml::parse(file_get_contents($path . 'config/route.yml'));
             if (is_array($data)) {
                 foreach ($data as $r) {
@@ -130,7 +130,7 @@ class Standard implements Services
      */
     public function setTranslation($di)
     {
-        if($di->has('translation')) {
+        if ($di->has('translation')) {
             return;
         }
         $config = $di->get('config');
@@ -159,7 +159,7 @@ class Standard implements Services
         $cacheDir = $this->projectPath .'/' . Module::COMMON_CACHE;
         $check = new Check($this->modulesPath, $cacheDir);
         if ($this->dev || !$check->isCacheExist()) {
-            if($check->isChangeConfiguration()) {
+            if ($check->isChangeConfiguration()) {
                 $parser = new Parser(
                     $this->modulesPath,
                     $this->projectPath . '/' . Module::CONFIG,
@@ -173,4 +173,4 @@ class Standard implements Services
         $load->execute($di);
         $di->get('config')->set('projectPath', json_encode($this->projectPath));
     }
-} 
+}

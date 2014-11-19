@@ -38,7 +38,7 @@ class Check
         $data = $this->loadCache();
         $result = false;
         try {
-            foreach($this->modulesPath as $modulePath) {
+            foreach ($this->modulesPath as $modulePath) {
                 $serviceFile = $modulePath . '/' . Module::SERVICE;
                 $time = filemtime($serviceFile);
                 if (array_key_exists($serviceFile, $data)) {
@@ -95,6 +95,4 @@ class Check
         } catch (\Exception $e) {
         }
     }
-
-
 }

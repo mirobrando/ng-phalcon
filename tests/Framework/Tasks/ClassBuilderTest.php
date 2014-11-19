@@ -278,7 +278,7 @@ class ClassBuilderTest extends  \UnitTestCase
         $mock
             ->expects($this->at(5))
             ->method('writeLine')
-            ->with("\t}");
+            ->with("\t}\n");
 
         $mock->addMethod('test', [], []);
     }
@@ -325,7 +325,7 @@ class ClassBuilderTest extends  \UnitTestCase
         $mock
             ->expects($this->at(7))
             ->method('writeLine')
-            ->with("\t}");
+            ->with("\t}\n");
 
         $mock->addMethod('getTest', [], ['return $this->test;'], 'int', 'public', ['getter']);
     }
@@ -393,7 +393,7 @@ class ClassBuilderTest extends  \UnitTestCase
         $mock
             ->expects($this->at(11))
             ->method('writeLine')
-            ->with("\t}");
+            ->with("\t}\n");
 
         $mock->addMethod(
             'setTest',

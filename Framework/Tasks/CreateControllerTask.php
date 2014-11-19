@@ -53,10 +53,10 @@ class CreateControllerTask extends Task
         file_put_contents($controllerPath, "\t}\n\n", FILE_APPEND);
 
         #route
-        file_put_contents($routePath, sprintf("\n- pattern: %s\n", $route) , FILE_APPEND);
-        file_put_contents($routePath, "  option:\n" , FILE_APPEND);
-        file_put_contents($routePath, sprintf("    controller: %s\n", $controllerName) , FILE_APPEND);
-        file_put_contents($routePath, sprintf("    action: %s\n", $actionName) , FILE_APPEND);
+        file_put_contents($routePath, sprintf("\n- pattern: %s\n", $route), FILE_APPEND);
+        file_put_contents($routePath, "  option:\n", FILE_APPEND);
+        file_put_contents($routePath, sprintf("    controller: %s\n", $controllerName), FILE_APPEND);
+        file_put_contents($routePath, sprintf("    action: %s\n", $actionName), FILE_APPEND);
 
         #view
         $viewPath =
@@ -69,15 +69,13 @@ class CreateControllerTask extends Task
     private function getModuleName($projectPath)
     {
         $name = '';
-        while($name == '') {
+        while ($name == '') {
             $modules = $this->getModules($projectPath);
             if (empty($modules)) {
                 $this->output()->writelnFormat('project hasn\'t modules');
                 return false;
             }
-
-            $name = $this->input()->getAnswer(
-                'Enter the name of the module', '', $modules);
+            $name = $this->input()->getAnswer('Enter the name of the module', '', $modules);
         }
         $moduleDir = $this->getModulePath($projectPath, $name);
 
@@ -93,10 +91,10 @@ class CreateControllerTask extends Task
     private function getControllerName($projectPath, $moduleName)
     {
         $name = '';
-        while($name == '') {
+        while ($name == '') {
             $name = $this->input()->getAnswer('Enter the name of the controller');
             if (preg_match('/Controller$/', $name)) {
-                $name = substr($name, 0 , strlen($name) -10);
+                $name = substr($name, 0, strlen($name) -10);
             }
 
             if ($name != '') {
@@ -116,10 +114,10 @@ class CreateControllerTask extends Task
         $actions = [];
 
         $name = 'start';
-        while($name != '') {
+        while ($name != '') {
             $name = $this->input()->getAnswer('Enter the name of the action');
             if (preg_match('/Action/', $name)) {
-                $name = substr($name, 0 , strlen($name) -10);
+                $name = substr($name, 0, strlen($name) -10);
             }
 
             if ($name != '') {
@@ -137,7 +135,9 @@ class CreateControllerTask extends Task
 
     private function getControllerPath($projectPath, $moduleName, $controllerName)
     {
-        return $this->getModulePath($projectPath, $moduleName) . '/controllers/' . ucfirst($controllerName) . 'Controller.php';
+        return
+            $this->getModulePath($projectPath, $moduleName) .
+            '/controllers/' . ucfirst($controllerName) . 'Controller.php';
     }
 
     private function getRoutePath($projectPath, $moduleName)
@@ -160,5 +160,4 @@ class CreateControllerTask extends Task
 
         return $modules;
     }
-
-} 
+}

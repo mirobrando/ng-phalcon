@@ -25,7 +25,7 @@ class Application extends \Phalcon\Mvc\Application
         parent::__construct();
     }
 
-    protected  function loadModules()
+    protected function loadModules()
     {
         $this->modules = Yaml::parse($this->projectPath. '/config/modules.yml');
         $this->registerModules($this->modules);
@@ -62,4 +62,4 @@ class Application extends \Phalcon\Mvc\Application
         }
 
     }
-} 
+}

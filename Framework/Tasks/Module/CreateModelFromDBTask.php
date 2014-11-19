@@ -204,7 +204,7 @@ class CreateModelFromDBTask extends Module
      */
     private function getTableName()
     {
-        while(empty($tableName)) {
+        while (empty($tableName)) {
             $tableName =  $this->input()->getAnswer(self::ENTER_TABLE_NAME, '', $this->getDatabase()->listTables());
             if (empty($tableName)) {
                 return false;
@@ -218,5 +218,4 @@ class CreateModelFromDBTask extends Module
 
         return $tableName;
     }
-
-} 
+}

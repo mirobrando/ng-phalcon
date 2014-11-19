@@ -51,5 +51,4 @@ interface Services
      * @return void
      */
     public function registerUserServices($di);
-
 }

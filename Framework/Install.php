@@ -14,5 +14,4 @@ class Install
         CreateFolders::execute();
         CreateController::execute();
     }
-
-} 
+}

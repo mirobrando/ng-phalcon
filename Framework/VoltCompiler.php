@@ -16,7 +16,7 @@ class VoltCompiler extends Compiler
                 $commonView,
                 $path
             );
-            if(is_readable($commonPath)) {
+            if (is_readable($commonPath)) {
                 $compiledPath = sprintf(
                     "%s%s%s",
                     $this->getOption('compiledPath'),
@@ -28,4 +28,4 @@ class VoltCompiler extends Compiler
         }
         return parent::compileFile($path, $compiledPath, $extendsMode);
     }
-} 
+}

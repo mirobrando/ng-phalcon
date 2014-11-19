@@ -15,7 +15,7 @@ class InstallResourcesTask extends Task
 
         $this->installModule('common', $projectPath. '/common', $publicDir);
 
-        foreach($modules as $name=>$module) {
+        foreach ($modules as $name => $module) {
             $this->installModule($name, $projectPath . dirname($module['path']), $publicDir);
         }
 
@@ -55,5 +55,4 @@ class InstallResourcesTask extends Task
 
         }
     }
-
 }

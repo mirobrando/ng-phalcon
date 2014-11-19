@@ -28,9 +28,7 @@ class Volt extends \Phalcon\Mvc\View\Engine\Volt
             call_user_func_array(['parent', 'partial'], $args);
             $this->getView()->setViewsDir($dir);
         } else {
-           call_user_func_array(['parent', 'partial'], $args);
+            call_user_func_array(['parent', 'partial'], $args);
         }
     }
-
-
 }

@@ -88,14 +88,14 @@ class Parser implements Output
      */
     private function parseParam($params)
     {
-        if(is_array($params)) {
+        if (is_array($params)) {
             $this->parameters = array_merge($this->parameters, $params);
         }
     }
 
     private function parseTasks($tasks)
     {
-        if(is_array($tasks)) {
+        if (is_array($tasks)) {
             foreach ($tasks as $taskName => $taskParams) {
                 $this->parseTasksParam($taskName, $taskParams);
             }
@@ -107,7 +107,7 @@ class Parser implements Output
         $task['class'] = $this->getClassValue($taskParams['class']);
         $task['action'] = $this->getClassValue($taskParams['action']);
         $task['description'] = '';
-        if( array_key_exists('description', $taskParams) ) {
+        if (array_key_exists('description', $taskParams)) {
             $task['description'] =  $taskParams['description'];
         }
         $task['params'] = [];
@@ -120,7 +120,7 @@ class Parser implements Output
 
     private function parseServices($services)
     {
-        if(is_array($services)) {
+        if (is_array($services)) {
             foreach ($services as $serviceName => $serviceParam) {
                 $this->parseServiceParam($serviceName, $serviceParam);
             }
@@ -133,7 +133,7 @@ class Parser implements Output
             $parser = new Listener($this);
             $parser->setEventName($serviceParam['event_name']);
             $parser->setEventMethod($serviceParam['event_method']);
-        } else if (array_key_exists('factory_service', $serviceParam)) {
+        } elseif (array_key_exists('factory_service', $serviceParam)) {
             $parser = new Factory($this);
             $parser->setFactoryClass($serviceParam['factory_service']);
             $parser->setFactoryMethod($serviceParam['factory_method']);
@@ -197,7 +197,7 @@ class Parser implements Output
      */
     private function parseParameter($text)
     {
-        if (preg_match('/^%([a-zA-Z_0-9-\\\.]+)%$/',$text,$matches)) {
+        if (preg_match('/^%([a-zA-Z_0-9-\\\.]+)%$/', $text, $matches)) {
             return $this->parameters[$matches[1]];
         }
 
@@ -210,7 +210,7 @@ class Parser implements Output
      */
     private function parseReferer($text)
     {
-        if (preg_match('/^@([a-zA-Z_0-9-\\\.]+)$/',$text,$matches)) {
+        if (preg_match('/^@([a-zA-Z_0-9-\\\.]+)$/', $text, $matches)) {
             return $matches[1];
         }
 
@@ -265,5 +265,4 @@ class Parser implements Output
             FILE_APPEND
         );
     }
-
-} 
+}

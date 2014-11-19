@@ -88,5 +88,4 @@ class Standard implements ParserInterface
     {
         $this->arguments[] = $argument;
     }
-
-} 
+}

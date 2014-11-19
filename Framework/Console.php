@@ -29,7 +29,7 @@ class Console extends ConsoleApp
         parent::__construct();
     }
 
-    protected  function loadModules()
+    protected function loadModules()
     {
         $this->modules = Yaml::parse($this->projectPath. '/config/modules.yml');
         $this->registerModules($this->modules);
@@ -53,7 +53,7 @@ class Console extends ConsoleApp
         $defaultCommands = new DefaultCommands($this->getDI(), $this->modules, $this->projectPath);
         $defaultCommands->addTasks($tasks);
 
-        if(count($this->args) < 2) {
+        if (count($this->args) < 2) {
             return $this->getListTask($tasks);
         }
         if (!array_key_exists($this->args[1], $tasks)) {
@@ -96,7 +96,7 @@ class Console extends ConsoleApp
         $data['task'] = $task['class'];
         $data['action'] = $task['action'];
         $data['params'] = [];
-        foreach($task['params'] as $param) {
+        foreach ($task['params'] as $param) {
             if ($param['type'] == 'service') {
                 $data['params'][] = $this->getDI()->get($param['name']);
             } else {
@@ -106,5 +106,4 @@ class Console extends ConsoleApp
 
         return $data;
     }
-
-} 
+}

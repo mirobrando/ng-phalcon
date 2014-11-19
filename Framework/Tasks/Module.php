@@ -50,7 +50,7 @@ class Module extends Task
      * @param string $moduleName
      * @return string
      */
-    protected  function getModulePath($projectPath, $moduleName)
+    protected function getModulePath($projectPath, $moduleName)
     {
         return $this->getModulesPath($projectPath) . '/' . $moduleName;
     }
@@ -74,4 +74,4 @@ class Module extends Task
 
         return $modules;
     }
-} 
+}

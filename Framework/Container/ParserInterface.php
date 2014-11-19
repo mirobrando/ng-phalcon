@@ -12,4 +12,4 @@ interface ParserInterface
      * @return void
      */
     public function writeDefinition();
-} 
+}

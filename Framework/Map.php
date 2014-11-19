@@ -33,4 +33,4 @@ class Map
     {
         return $this->get($name);
     }
-} 
+}

@@ -5,7 +5,6 @@ namespace mirolabs\phalcon\Framework;
 use Phalcon\Mvc\Dispatcher;
 use Phalcon\Translate\Adapter\NativeArray;
 
-
 class Translation
 {
 
@@ -63,7 +62,7 @@ class Translation
      */
     protected function getMessages($dir)
     {
-        $file = $dir . 'messages/' . $this->lang . '.php';;
+        $file = sprintf("%smessages/%s.php", $dir, $this->lang);
         if (file_exists($file)) {
             require $file;
             return $messages;
@@ -71,4 +70,4 @@ class Translation
 
         return [];
     }
-} 
+}

@@ -51,7 +51,7 @@ class CreateModuleTask extends Task
     private function getModuleName($projectPath)
     {
         $name = '';
-        while($name == '') {
+        while ($name == '') {
             $name = $this->input()->getAnswer('Enter the name of the module');
         }
         $moduleDir = $projectPath . '/' . self::MODULES_DIR . '/' . $name;
@@ -82,8 +82,8 @@ class CreateModuleTask extends Task
 
     private function createFile($fileName)
     {
-        file_put_contents($fileName,'');
-        chmod($fileName,0777);
+        file_put_contents($fileName, '');
+        chmod($fileName, 0777);
     }
 
     private function writeLine($fileName, $message)

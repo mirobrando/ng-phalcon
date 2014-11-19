@@ -29,4 +29,4 @@ class CreateController
         file_put_contents($templatePath, "<h4>You're now flying with ng-Phalcon.</h4>\n", FILE_APPEND);
         file_put_contents($templatePath, "\n\n{% endblock %}\n", FILE_APPEND);
     }
-} 
+}

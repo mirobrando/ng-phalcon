@@ -35,14 +35,14 @@ class DefaultCommands
 
     public function addTasks(array &$tasks)
     {
-        foreach(get_class_methods($this) as $method) {
-            if (preg_match('/^_add[a-zA-Z_]+/', $method)) {
+        foreach (get_class_methods($this) as $method) {
+            if (preg_match('/^set[a-zA-Z_]+/', $method)) {
                 $this->$method($tasks);
             }
         }
     }
 
-    public function _addCreateModule(&$tasks)
+    protected function setCreateModule(&$tasks)
     {
         $tasks['createModule'] = [
             'class' => 'mirolabs\phalcon\Framework\Tasks\CreateModule',
@@ -54,7 +54,7 @@ class DefaultCommands
         ];
     }
 
-    public function _addInstallResources(&$tasks)
+    protected function setInstallResources(&$tasks)
     {
         $tasks['installResources'] = [
             'class' => 'mirolabs\phalcon\Framework\Tasks\InstallResources',
@@ -68,7 +68,7 @@ class DefaultCommands
     }
 
 
-    public function _addCreateController(&$tasks)
+    protected function setCreateController(&$tasks)
     {
         $tasks['createController'] = [
             'class' => 'mirolabs\phalcon\Framework\Tasks\CreateController',
@@ -80,7 +80,7 @@ class DefaultCommands
         ];
     }
 
-    private function _addCreateModelFromDB(&$tasks)
+    protected function setCreateModelFromDB(&$tasks)
     {
         $tasks['createModelFromDB'] = [
             'class' => 'mirolabs\phalcon\Framework\Tasks\Module\CreateModelFromDB',
@@ -91,6 +91,4 @@ class DefaultCommands
             ]
         ];
     }
-
-
 }

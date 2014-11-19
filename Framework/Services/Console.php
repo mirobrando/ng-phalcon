@@ -14,12 +14,4 @@ class Console extends Standard
     {
         return new CliDI();
     }
-
-
-    public function getTaskList()
-    {
-
-    }
-
-
-} 
+}

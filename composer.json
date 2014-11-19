@@ -20,7 +20,8 @@
     },
     "require-dev": {
         "phpunit/phpunit": "4.3.*",
-        "phalcon/incubator": "dev-master"
+        "phalcon/incubator": "dev-master",
+        "squizlabs/php_codesniffer": "1.*"
     }
 
 

@@ -21,5 +21,4 @@ class Load
         _loadConfig($di);
         _loadServices($di);
     }
-
-} 
+}

@@ -20,7 +20,4 @@ class CreateFolders
         mkdir($folder . '/public/js', 0755);
         mkdir($folder . '/public/views', 0755);
     }
-
-
-
-} 
+}
