@@ -8,7 +8,7 @@ use org\bovigo\vfs\vfsStreamWrapper;
 use Phalcon\Config;
 use Phalcon\DiInterface;
 
-class DefinitionBuilderTest extends  \UnitTestCase
+class DefinitionBuilderTest extends \UnitTestCase
 {
 
     private $file;

@@ -13,6 +13,7 @@ class Parser implements Output
 {
     const CACHE_FILE = 'container.php';
     const CACHE_TASKS = '.task.log';
+
     /**
      * @var string
      */
