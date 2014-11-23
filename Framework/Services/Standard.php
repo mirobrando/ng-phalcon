@@ -42,28 +42,28 @@ class Standard implements Services
     }
 
     /**
-     * @param \Phalcon\DI\FactoryDefault $di
+     * @param \Phalcon\DI\FactoryDefault $dependencyInjection
      * @return void
      */
-    public function setListenerManager($di)
+    public function setListenerManager($dependencyInjection)
     {
         $eventsManager = new EventsManager();
-        $di->set('listener', $eventsManager);
-        $di->get('dispatcher')->setEventsManager($eventsManager);
+        $dependencyInjection->set('listener', $eventsManager);
+        $dependencyInjection->get('dispatcher')->setEventsManager($eventsManager);
     }
 
 
     /**
-     * @param \Phalcon\DI\FactoryDefault $di
+     * @param \Phalcon\DI\FactoryDefault $dependencyInjection
      * @return void
      */
-    public function setDb($di)
+    public function setDb($dependencyInjection)
     {
-        if ($di->has('db')) {
+        if ($dependencyInjection->has('db')) {
             return;
         }
-        $config = $di->get('config');
-        $di->set('db', function () use ($config) {
+        $config = $dependencyInjection->get('config');
+        $dependencyInjection->set('db', function () use ($config) {
             return new DbAdapter([
                 'host' => $config->database->host,
                 'username' => $config->database->username,
@@ -75,13 +75,13 @@ class Standard implements Services
     }
 
     /**
-     * @param \Phalcon\DI\FactoryDefault $di
+     * @param \Phalcon\DI\FactoryDefault $dependencyInjection
      * @return void
      */
-    public function setRouter($di)
+    public function setRouter($dependencyInjection)
     {
         $router = new Router();
-        $di->set('router', $router);
+        $dependencyInjection->set('router', $router);
         foreach ($this->modulesPath as $module => $path) {
             $this->addRouteModule($router, $module, $path);
         }
@@ -116,44 +116,43 @@ class Standard implements Services
 
 
     /**
-     * @param \Phalcon\DI\FactoryDefault $di
+     * @param \Phalcon\DI\FactoryDefault $dependencyInjection
      * @return void
      */
-    public function setUrl($di)
+    public function setUrl($dependencyInjection)
     {
         $url = new UrlResolver();
         $url->setBaseUri('/');
 
-        $di->set('url', $url);
+        $dependencyInjection->set('url', $url);
     }
 
     /**
-     * @param \Phalcon\DI\FactoryDefault $di
+     * @param \Phalcon\DI\FactoryDefault $dependencyInjection
      * @return void
      */
-    public function setSession($di)
+    public function setSession($dependencyInjection)
     {
         $session = new SessionAdapter();
         $session->start();
-        $di->set('session', $session);
+        $dependencyInjection->set('session', $session);
     }
 
     /**
-     * @param \Phalcon\DI\FactoryDefault $di
+     * @param \Phalcon\DI\FactoryDefault $dependencyInjection
      * @return void
      */
-    public function setTranslation($di)
+    public function setTranslation($dependencyInjection)
     {
-        if ($di->has('translation')) {
+        if ($dependencyInjection->has('translation')) {
             return;
         }
-        $config = $di->get('config');
+        $config = $dependencyInjection->get('config');
         $lang = $config->get('default.lang');
         if (empty($lang)) {
             $lang = 'en';
         }
-
-        $di->set('translation', [
+        $dependencyInjection->set('translation', [
             'className' => 'mirolabs\phalcon\Framework\Translation',
             'arguments' => [
                 ['type' => 'service', 'name' => 'dispatcher'],
@@ -165,10 +164,10 @@ class Standard implements Services
 
 
     /**
-     * @param \Phalcon\DI\FactoryDefault $di
+     * @param \Phalcon\DI\FactoryDefault $dependencyInjection
      * @return void
      */
-    public function registerUserServices($di)
+    public function registerUserServices($dependencyInjection)
     {
         $cacheDir = $this->projectPath .'/' . Module::COMMON_CACHE;
         $check = new Check($this->modulesPath, $cacheDir);
@@ -184,7 +183,7 @@ class Standard implements Services
         }
 
         $load = new Load($cacheDir);
-        $load->execute($di);
-        $di->get('config')->set('projectPath', json_encode($this->projectPath));
+        $load->execute($dependencyInjection);
+        $dependencyInjection->get('config')->set('projectPath', json_encode($this->projectPath));
     }
 }

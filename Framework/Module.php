@@ -27,15 +27,26 @@ abstract class Module implements ModuleDefinitionInterface
     /**
      * Registers the module-only services
      *
-     * @param Phalcon\DI $di
+     * @param Phalcon\DI $dependencyInjection
      */
-    public function registerServices($di)
+    public function registerServices($dependencyInjection)
     {
-        $config = $di->get('config');
+        $volt = $this->createView($dependencyInjection);
+        $this->createVoltFunction($dependencyInjection, $volt);
+        $dependencyInjection->set('view', $volt->getView());
+        $dependencyInjection->get('dispatcher')->setDefaultNamespace($this->moduleNamespace . "\controllers\\");
+    }
 
+    /**
+     * @param Phalcon\DI $dependencyInjection
+     * @return Volt
+     */
+    protected function createView($dependencyInjection)
+    {
+        $config = $dependencyInjection->get('config');
         $view = new View();
         $view->setViewsDir($this->modulePath . '/views/');
-        $volt = new Volt($view, $di);
+        $volt = new Volt($view, $dependencyInjection);
         $volt->setOptions([
             'compiledPath' => $config->view->compiledPath,
             'compiledExtension' => $config->view->compiledExtension,
@@ -44,32 +55,31 @@ abstract class Module implements ModuleDefinitionInterface
             'compileAlways' => $config->view->compileAlways,
             'commonView' => $config->projectPath . 'common/views/'
         ]);
+        $view->registerEngines([".volt" => $volt]);
+        $view->setRenderLevel(View::LEVEL_ACTION_VIEW);
 
+        return $volt;
+    }
+
+    /**
+     * @param Phalcon\DI $dependencyInjection
+     * @param Volt $volt
+     */
+    protected function createVoltFunction($dependencyInjection, $volt)
+    {
+        $config = $dependencyInjection->get('config');
         $volt->getCompiler()->addFilter('raw', function ($resolvedArgs, $exprArgs) {
             return 'html_entity_decode(' . $resolvedArgs . ')';
         });
-
-        $volt->getCompiler()->addFunction('lang', function () use ($di) {
+        $volt->getCompiler()->addFunction('lang', function () use ($dependencyInjection) {
             return '$this->translation->getLang()';
         });
-
-        $volt->getCompiler()->addFunction('trans', function ($resolvedArgs, $exprArgs) use ($di) {
+        $volt->getCompiler()->addFunction('trans', function ($resolvedArgs, $exprArgs) use ($dependencyInjection) {
             return sprintf('$this->translation->__get(\'%s\')', $exprArgs[0]['expr']['value']);
         });
-
         $volt->getCompiler()->addFunction('ng', function ($input) {
             return '"{{".' . $input . '."}}"';
         });
-
-        $view->registerEngines([
-            ".volt" => $volt
-        ]);
-
-        $view->setRenderLevel(View::LEVEL_ACTION_VIEW);
-
-
-        $di->set('view', $view);
-        $di->get('dispatcher')->setDefaultNamespace($this->moduleNamespace . "\controllers\\");
-        $view->ngAppName = $config->get('ng.app.name');
+        $volt->getView()->ngAppName = $config->get('ng.app.name');
     }
 }
