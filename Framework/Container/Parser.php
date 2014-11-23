@@ -208,6 +208,7 @@ class Parser
     private function saveServices()
     {
         $definitionBuilder = $this->getDefinitionBuilder($this->cacheDir . '/' . self::CACHE_CONTAINER);
+        $definitionBuilder->createFile();
         $definitionBuilder->writeLine("<?php\n\n");
         $definitionBuilder->writeLine("\t" . 'function _loadConfig($di)');
         $definitionBuilder->writeLine("\t{");
