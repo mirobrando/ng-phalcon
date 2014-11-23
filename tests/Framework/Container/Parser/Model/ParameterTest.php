@@ -23,6 +23,7 @@ class ParameterTest extends \UnitTestCase
         $parameter = new Parameter('test.param.key', $value);
         $parameter->writeDefinition($mock);
         $this->assertEquals($value, $parameter->getValue());
+        $mock->mockery_verify();
     }
 }
 

@@ -55,6 +55,8 @@ class FactoryTest extends \UnitTestCase
             "\t\t});\n";
 
         $this->assertEquals($expectedResult, file_get_contents($this->file));
+        $fileBuilderMock->mockery_verify();
+        $attributeParserMock->mockery_verify();
     }
 }
  

@@ -1,8 +1,11 @@
-<?php
+<?php // @codeCoverageIgnoreStart
 
 namespace mirolabs\phalcon\Framework\Container\Parser;
 
-
+/**
+ * Interface Output
+ * @package mirolabs\phalcon\Framework\Container\Parser
+ */
 interface Output
 {
     /**
@@ -10,4 +13,4 @@ interface Output
      * @return void
      */
     public function writeDefinition(DefinitionBuilder $definitionBuilder);
-} 
+}

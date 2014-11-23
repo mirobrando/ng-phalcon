@@ -59,7 +59,7 @@ class Check
      * @param array $data
      * @return bool
      */
-    private function checkFile($file,array &$data)
+    private function checkFile($file, array &$data)
     {
         $result = true;
         if (array_key_exists($file, $data)) {
