@@ -24,7 +24,7 @@ class Load
      */
     public function execute($dependencyInjection)
     {
-        require_once $this->cacheDir . '/' . Parser::CACHE_FILE;
+        require_once $this->cacheDir . '/' . Parser::CACHE_CONTAINER;
         _loadConfig($dependencyInjection);
         _loadServices($dependencyInjection);
     }
