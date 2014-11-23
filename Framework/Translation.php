@@ -64,8 +64,7 @@ class Translation
     {
         $file = sprintf("%smessages/%s.php", $dir, $this->lang);
         if (file_exists($file)) {
-            require $file;
-            return $messages;
+            return include $file;
         }
 
         return [];

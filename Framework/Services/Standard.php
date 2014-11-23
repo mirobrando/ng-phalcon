@@ -81,25 +81,39 @@ class Standard implements Services
     public function setRouter($di)
     {
         $router = new Router();
+        $di->set('router', $router);
         foreach ($this->modulesPath as $module => $path) {
-            $data = Yaml::parse(file_get_contents($path . 'config/route.yml'));
-            if (is_array($data)) {
-                foreach ($data as $r) {
-                    $router->add(
-                        $r['pattern'],
-                        [
-                            'module' => $module,
-                            'controller' => $r['option']['controller'],
-                            'action' => $r['option']['action'],
-                        ],
-                        array_key_exists('method', $r) ? $r['method'] : null
-                    );
-                }
+            $this->addRouteModule($router, $module, $path);
+        }
+    }
+
+    /**
+     * @param Router $router
+     * @param string $module
+     * @param string $path
+     */
+    private function addRouteModule($router, $module, $path)
+    {
+        $data = Yaml::parse(file_get_contents($path . 'config/route.yml'));
+        if (is_array($data)) {
+            foreach ($data as $r) {
+                $router->get('route')->add(
+                    $r['pattern'],
+                    [
+                        'module' => $module,
+                        'controller' => $r['option']['controller'],
+                        'action' => $r['option']['action'],
+                    ],
+                    array_key_exists('method', $r) ? $r['method'] : null
+                );
             }
         }
-
-        $di->set('router', $router);
     }
+
+
+
+
+
 
     /**
      * @param \Phalcon\DI\FactoryDefault $di

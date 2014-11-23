@@ -2,23 +2,30 @@
 
 namespace mirolabs\phalcon\Framework\Container;
 
+use Phalcon\DiInterface;
 
 class Load
 {
     /**
-     * @var
+     * @var string
      */
     private $cacheDir;
 
+    /**
+     * @param string $cacheDir
+     */
     public function __construct($cacheDir)
     {
         $this->cacheDir = $cacheDir;
     }
 
-    public function execute($di)
+    /**
+     * @param DiInterface $dependencyInjection
+     */
+    public function execute($dependencyInjection)
     {
         require_once $this->cacheDir . '/' . Parser::CACHE_FILE;
-        _loadConfig($di);
-        _loadServices($di);
+        _loadConfig($dependencyInjection);
+        _loadServices($dependencyInjection);
     }
 }
