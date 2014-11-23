@@ -19,13 +19,13 @@ class TaskTest extends \UnitTestCase
         $attributeParserMock
             ->shouldReceive('getClassValue')
             ->once()
-            ->with('class')
+            ->with('test\Task')
             ->andReturn('test\Task');
 
         $attributeParserMock
             ->shouldReceive('getClassValue')
             ->once()
-            ->with('action')
+            ->with('callTask')
             ->andReturn('callTask');
 
         $attributeParserMock
@@ -68,13 +68,13 @@ class TaskTest extends \UnitTestCase
         $attributeParserMock
             ->shouldReceive('getClassValue')
             ->once()
-            ->with('class')
+            ->with('test\Task')
             ->andReturn('test\Task');
 
         $attributeParserMock
             ->shouldReceive('getClassValue')
             ->once()
-            ->with('action')
+            ->with('callTask')
             ->andReturn('callTask');
 
         $attributeParserMock

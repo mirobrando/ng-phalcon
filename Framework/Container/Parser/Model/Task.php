@@ -13,7 +13,7 @@ class Task extends Service
     {
         return [
             'class' => $this->getClassName(),
-            'action' => $this->attributeParser->getClassValue(self::ATTRIBUTE_CLASS_ACTION),
+            'action' => $this->attributeParser->getClassValue($this->values[self::ATTRIBUTE_CLASS_ACTION]),
             'description' => $this->getDescription(),
             'params' => $this->getArguments()
         ];
