@@ -77,7 +77,7 @@ class Service implements Output
      */
     protected function getClassName()
     {
-        return $this->attributeParser->getClassValue(self::ATTRIBUTE_CLASS_NAME);
+        return $this->attributeParser->getClassValue($this->values[self::ATTRIBUTE_CLASS_NAME]);
     }
 
     /**
