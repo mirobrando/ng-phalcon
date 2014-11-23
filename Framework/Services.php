@@ -11,44 +11,44 @@ interface Services
     public function createContainer();
 
     /**
-     * @param \Phalcon\DI\FactoryDefault $di
+     * @param \Phalcon\DI\FactoryDefault $dependencyInjection
      * @return void
      */
-    public function setListenerManager($di);
+    public function setListenerManager($dependencyInjection);
 
     /**
-     * @param \Phalcon\DI\FactoryDefault $di
+     * @param \Phalcon\DI\FactoryDefault $dependencyInjection
      * @return void
      */
-    public function setDb($di);
+    public function setDb($dependencyInjection);
 
     /**
-     * @param \Phalcon\DI\FactoryDefault $di
+     * @param \Phalcon\DI\FactoryDefault $dependencyInjection
      * @return void
      */
-    public function setRouter($di);
+    public function setRouter($dependencyInjection);
 
     /**
-     * @param \Phalcon\DI\FactoryDefault $di
+     * @param \Phalcon\DI\FactoryDefault $dependencyInjection
      * @return void
      */
-    public function setUrl($di);
+    public function setUrl($dependencyInjection);
 
     /**
-     * @param \Phalcon\DI\FactoryDefault $di
+     * @param \Phalcon\DI\FactoryDefault $dependencyInjection
      * @return void
      */
-    public function setSession($di);
+    public function setSession($dependencyInjection);
 
     /**
-     * @param \Phalcon\DI\FactoryDefault $di
+     * @param \Phalcon\DI\FactoryDefault $dependencyInjection
      * @return void
      */
-    public function setTranslation($di);
+    public function setTranslation($dependencyInjection);
 
     /**
-     * @param \Phalcon\DI\FactoryDefault $di
+     * @param \Phalcon\DI\FactoryDefault $dependencyInjection
      * @return void
      */
-    public function registerUserServices($di);
+    public function registerUserServices($dependencyInjection);
 }

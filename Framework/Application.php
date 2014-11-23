@@ -34,15 +34,15 @@ class Application extends \Phalcon\Mvc\Application
     protected function loadServices()
     {
         $services = new Standard($this->projectPath, $this->modules, $this->dev);
-        $di = $services->createContainer();
-        $services->setListenerManager($di);
-        $services->registerUserServices($di);
-        $services->setDb($di);
-        $services->setRouter($di);
-        $services->setUrl($di);
-        $services->setSession($di);
-        $services->setTranslation($di);
-        $this->setDI($di);
+        $dependencyInjection = $services->createContainer();
+        $services->setListenerManager($dependencyInjection);
+        $services->registerUserServices($dependencyInjection);
+        $services->setDb($dependencyInjection);
+        $services->setRouter($dependencyInjection);
+        $services->setUrl($dependencyInjection);
+        $services->setSession($dependencyInjection);
+        $services->setTranslation($dependencyInjection);
+        $this->setDI($dependencyInjection);
     }
 
     public function main()

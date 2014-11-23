@@ -38,12 +38,12 @@ class Console extends ConsoleApp
     protected function loadServices()
     {
         $services = new ConsoleDi($this->projectPath, $this->modules, $this->dev);
-        $di = $services->createContainer();
-        $services->setListenerManager($di);
-        $services->registerUserServices($di);
-        $services->setDb($di);
-        $services->setTranslation($di);
-        $this->setDI($di);
+        $dependencyInjection = $services->createContainer();
+        $services->setListenerManager($dependencyInjection);
+        $services->registerUserServices($dependencyInjection);
+        $services->setDb($dependencyInjection);
+        $services->setTranslation($dependencyInjection);
+        $this->setDI($dependencyInjection);
     }
 
     protected function getArguments()
