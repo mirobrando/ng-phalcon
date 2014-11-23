@@ -97,7 +97,7 @@ class Standard implements Services
         $data = Yaml::parse(file_get_contents($path . 'config/route.yml'));
         if (is_array($data)) {
             foreach ($data as $r) {
-                $router->get('route')->add(
+                $router->add(
                     $r['pattern'],
                     [
                         'module' => $module,
