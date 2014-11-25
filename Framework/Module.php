@@ -2,6 +2,7 @@
 
 namespace mirolabs\phalcon\Framework;
 
+use mirolabs\phalcon\Framework\View\VoltCompiler;
 use mirolabs\phalcon\Framework\Volt;
 use Phalcon\Mvc\ModuleDefinitionInterface;
 use Phalcon\Mvc\View;
@@ -48,7 +49,7 @@ abstract class Module implements ModuleDefinitionInterface
         $view->setViewsDir($this->modulePath . '/views/');
         $volt = new Volt($view, $dependencyInjection);
         $volt->setOptions([
-            'compiledPath' => $config->view->compiledPath,
+            VoltCompiler::OPTION_COMPILED_PATH => $config->view->compiledPath,
             'compiledExtension' => $config->view->compiledExtension,
             'compiledSeparator' => $config->view->compiledSeparator,
             'stat' => $config->view->stat,

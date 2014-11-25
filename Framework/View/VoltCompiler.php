@@ -3,6 +3,7 @@
 namespace mirolabs\phalcon\Framework\View;
 
 
+use mirolabs\phalcon\Framework\Application;
 use Phalcon\Mvc\View\Engine\Volt\Compiler;
 use Phalcon\Mvc\View;
 
@@ -17,8 +18,7 @@ class VoltCompiler extends Compiler
     const OPTION_STAT = 'stat';
     const OPTION_COMPILE_ALWAYS ='compileAlways';
     const DIR_MODULE_OVERWRITTEN = 'modules';
-    const ENVIRONMENT_PROD = 'prod';
-    const ENVIRONMENT_DEV = 'dev';
+
 
     /**
      * @param string $path
@@ -33,14 +33,13 @@ class VoltCompiler extends Compiler
         return $this->parentCompileFile($path, $compiledPath, $extendsMode);
     }
 
-
     /**
      * @param $path
      * @return string
      */
     protected function getTemplateFile($path)
     {
-        if ($this->getOption(self::OPTION_ENVIRONMENT) == self::ENVIRONMENT_PROD) {
+        if ($this->getOption(self::OPTION_ENVIRONMENT) == Application::ENVIRONMENT_PROD) {
             return $this->getIndexTemplateFile($path);
         }
 

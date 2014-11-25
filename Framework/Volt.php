@@ -17,7 +17,7 @@ class Volt extends \Phalcon\Mvc\View\Engine\Volt
         return $this->_compiler;
     }
 
-
+    /**
     public function partial($partialPath)
     {
         $args = func_get_args();
@@ -31,4 +31,5 @@ class Volt extends \Phalcon\Mvc\View\Engine\Volt
             call_user_func_array(['parent', 'partial'], $args);
         }
     }
+     */
 }
