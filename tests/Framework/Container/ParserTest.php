@@ -56,6 +56,9 @@ class ParserTest extends \UnitTestCase
         $containerBuilder
             ->shouldReceive('writeLine');
 
+        $containerBuilder
+            ->shouldReceive('createFile');
+
         $taskBuilder
             ->shouldReceive('write');
 

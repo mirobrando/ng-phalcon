@@ -26,6 +26,7 @@ class VoltCompilerTest extends \UnitTestCase
 
     public function testModulePath()
     {
+        $this->createFolders();
         $templateModulePath = $this->createFile('modules/test/views/front/hello.volt');
         $this->setOptions('test');
         $this->setModuleViewsDir('vfs://root/modules/test/views');
@@ -44,11 +45,136 @@ class VoltCompilerTest extends \UnitTestCase
 
         $this->voltCompiler->compileFile($templateModulePath, '', false);
         $this->voltCompiler->mockery_verify();
-
     }
 
-    private function setOptions($moduleName, $commonView = 'common/views', $compiledExtension = '.compile',
-                                $compiledSeparator = "%%", $compiledPath = 'cache/', $environment = 'dev'
+    public function testOverwrittenPath()
+    {
+        $this->createFolders();
+        $this->createFile('common/views/modules/test/front/hello.volt');
+        $templateModulePath = $this->createFile('modules/test/views/front/hello.volt');
+        $this->setOptions('test');
+        $this->setModuleViewsDir('vfs://root/modules/test/views');
+        $this->voltCompiler
+            ->shouldReceive('parentCompileFile')
+            ->with(
+                'vfs://root/common/views/modules/test/front/hello.volt',
+                'cache/vfs:%%%%root%%common%%views%%modules%%test%%front%%hello.volt.compile',
+                false)
+            ->once();
+
+        $this->voltCompiler
+            ->shouldReceive('parentCompileFile')
+            ->withAnyArgs()
+            ->never();
+
+        $this->voltCompiler->compileFile($templateModulePath, '', false);
+        $this->voltCompiler->mockery_verify();
+    }
+
+
+    public function testCommonPath()
+    {
+        $this->createFolders();
+        $this->createFile('common/views/modules/test/front/hello.volt');
+        $this->createFile('common/views/front/hello.volt');
+        $templateModulePath = $this->createFile('modules/test/views/front/hello.volt');
+        $this->setOptions('test');
+        $this->setModuleViewsDir('vfs://root/modules/test/views');
+        $this->voltCompiler
+            ->shouldReceive('parentCompileFile')
+            ->with(
+                'vfs://root/common/views/front/hello.volt',
+                'cache/vfs:%%%%root%%common%%views%%front%%hello.volt.compile',
+                false)
+            ->once();
+
+        $this->voltCompiler
+            ->shouldReceive('parentCompileFile')
+            ->withAnyArgs()
+            ->never();
+
+        $this->voltCompiler->compileFile($templateModulePath, '', false);
+        $this->voltCompiler->mockery_verify();
+    }
+
+
+    public function testCommonPathProd()
+    {
+        $this->createFolders();
+        $this->createFile('common/views/modules/test/front/hello.volt');
+        $this->createFile('common/views/front/hello.volt');
+        $templateModulePath = $this->createFile('modules/test/views/front/hello.volt');
+        $this->setOptions('test', 'prod');
+        $this->setModuleViewsDir('vfs://root/modules/test/views');
+        $this->voltCompiler
+            ->shouldReceive('parentCompileFile')
+            ->with(
+                'vfs://root/common/views/front/hello.volt',
+                'cache/vfs:%%%%root%%common%%views%%front%%hello.volt.compile',
+                false)
+            ->once();
+
+        $this->voltCompiler
+            ->shouldReceive('parentCompileFile')
+            ->withAnyArgs()
+            ->never();
+
+        $this->voltCompiler->compileFile($templateModulePath, '', false);
+        $this->voltCompiler->mockery_verify();
+    }
+
+    public function testIndexDevPath()
+    {
+        $this->createFolders();
+        $this->createFile('common/views/index.volt');
+        $templateModulePath = $this->createFile('modules/test/views/index.volt');
+        $this->setOptions('test');
+        $this->setModuleViewsDir('vfs://root/modules/test/views');
+        $this->voltCompiler
+            ->shouldReceive('parentCompileFile')
+            ->with(
+                'vfs://root/common/views/index.volt',
+                'cache/vfs:%%%%root%%common%%views%%index.volt.compile',
+                false)
+            ->once();
+
+        $this->voltCompiler
+            ->shouldReceive('parentCompileFile')
+            ->withAnyArgs()
+            ->never();
+
+        $this->voltCompiler->compileFile($templateModulePath, '', false);
+        $this->voltCompiler->mockery_verify();
+    }
+
+
+    public function testIndexProdPath()
+    {
+        $this->createFolders();
+        $this->createFile('common/views/index_deploy.volt');
+        $templateModulePath = $this->createFile('modules/test/views/index.volt');
+        $this->setOptions('test', 'prod');
+        $this->setModuleViewsDir('vfs://root/modules/test/views');
+        $this->voltCompiler
+            ->shouldReceive('parentCompileFile')
+            ->with(
+                'vfs://root/common/views/index_deploy.volt',
+                'cache/vfs:%%%%root%%common%%views%%index_deploy.volt.compile',
+                false)
+            ->once();
+
+        $this->voltCompiler
+            ->shouldReceive('parentCompileFile')
+            ->withAnyArgs()
+            ->never();
+
+        $this->voltCompiler->compileFile($templateModulePath, '', false);
+        $this->voltCompiler->mockery_verify();
+    }
+
+
+    private function setOptions($moduleName, $environment = 'dev', $commonView = 'vfs://root/common/views',
+                                $compiledExtension = '.compile', $compiledSeparator = "%%", $compiledPath = 'cache/'
     ) {
         $this->setOption(VoltCompiler::OPTION_ENVIRONMENT, $environment);
         $this->setOption(VoltCompiler::OPTION_COMPILED_PATH, $compiledPath);
@@ -74,9 +200,21 @@ class VoltCompilerTest extends \UnitTestCase
             ->andReturn($moduleDir);
     }
 
-    private function createFile($filePath)
+
+    private function createFolders()
     {
         vfsStream::setup('root');
+        $structure = [
+            'common' => [
+                'views' => ['modules' => []]
+            ],
+            'modules' => []
+        ];
+        vfsStream::create($structure);
+    }
+
+    private function createFile($filePath)
+    {
         vfsStream::newFile($filePath)->at(vfsStreamWrapper::getRoot());
         return vfsStream::url('root/' . $filePath);
     }
