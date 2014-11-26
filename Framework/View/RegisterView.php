@@ -3,6 +3,7 @@
 namespace mirolabs\phalcon\Framework\View;
 
 
+use mirolabs\phalcon\Framework\Map;
 use Phalcon\DI;
 use Phalcon\Mvc\View;
 
@@ -61,7 +62,7 @@ class RegisterView
         ]);
         $this->createVoltFunctions($volt);
         $this->createVoltFilters($volt);
-        $this->createVoltVars($volt);
+        $this->createVoltVars();
         return $volt;
     }
 
@@ -95,16 +96,15 @@ class RegisterView
     }
 
     /**
-     * @param Volt $volt
      */
-    protected function createVoltVars($volt)
+    protected function createVoltVars()
     {
         $config = $this->getConfig();
-        $volt->getView()->ngAppName = $config->get('ng.app.name');
+        $this->view->setVar('ngAppName', $config->get('ng.app.name'));
     }
 
     /**
-     * @return \stdClass
+     * @return Map
      */
     protected function getConfig()
     {

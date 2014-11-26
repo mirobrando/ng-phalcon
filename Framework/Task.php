@@ -43,3 +43,4 @@ class Task extends TaskCli
         return $this->output;
     }
 }
+
