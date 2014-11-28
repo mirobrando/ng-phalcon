@@ -2,7 +2,6 @@
 
 namespace mirolabs\phalcon\Framework\View;
 
-
 use mirolabs\phalcon\Framework\Application;
 use Phalcon\Mvc\View\Engine\Volt\Compiler;
 use Phalcon\Mvc\View;
@@ -22,16 +21,14 @@ class VoltCompiler extends Compiler
 
     /**
      * @param string $path
-     * @param string $compiledPath
-     * @param null|bool $extendsMode
-     * @return array|string|void
+     * @param null $extendsMode
+     * @return array|string
      */
-    public function compileFile($path, $compiledPath, $extendsMode = null)
+    public function compile($path, $extendsMode = null)
     {
-        $path = $this->getTemplateFile($path);
-        $compiledPath = $this->getCompliedPath($path);
-        return $this->parentCompileFile($path, $compiledPath, $extendsMode);
+        return parent::compile($this->getTemplateFile($path), $extendsMode);
     }
+
 
     /**
      * @param $path
@@ -52,7 +49,7 @@ class VoltCompiler extends Compiler
      */
     protected function getIndexTemplateFile($path)
     {
-        if ($this->getModuleViewsDir() . '/index.volt' == $path) {
+        if ($this->getModuleViewsDir() . '/index.volt' == $path || $path == 'index.volt') {
             return $this->getCommonViewPath($this->getModuleViewsDir() . '/index_deploy.volt');
         }
 
@@ -88,20 +85,6 @@ class VoltCompiler extends Compiler
     }
 
     /**
-     * @param $path
-     * @return string
-     */
-    protected function getCompliedPath($path)
-    {
-        return sprintf(
-            "%s%s%s",
-            $this->getOption(self::OPTION_COMPILED_PATH),
-            str_replace('/', $this->getOption(self::OPTION_COMPILED_SEPARATOR), $path),
-            $this->getOption(self::OPTION_COMPILED_EXTENSION)
-        );
-    }
-
-    /**
      * @param string $path
      * @return string
      */
@@ -133,7 +116,7 @@ class VoltCompiler extends Compiler
     protected function getOverwrittenDir()
     {
         return sprintf(
-            "%s/%s/%s",
+            "%s/%s/%s/",
             $this->getOption(self::OPTION_COMMON_VIEW),
             self::DIR_MODULE_OVERWRITTEN,
             $this->getOption(self::OPTION_MODULE_NAME)
@@ -165,7 +148,7 @@ class VoltCompiler extends Compiler
      * @param $extendsMode
      * @return array|string
      */
-    protected function parentCompileFile($path, $compiledPath, $extendsMode)
+    protected function parentwCompileFile($path, $compiledPath, $extendsMode)
     {
         return parent::compileFile($path, $compiledPath, $extendsMode);
     }

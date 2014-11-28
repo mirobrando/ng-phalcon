@@ -11,7 +11,7 @@ class RegisterViewTest extends \UnitTestCase
 {
     public function testRegisterView()
     {
-        $view = \Mockery::mock('Phalcon\Mvc\View');
+        $view = \Mockery::mock('Phalcon\Mvc\View')->shouldDeferMissing()->makePartial();
         $dependencyInjection = new DI();
         $modulePath = 'projectPath/modules';
         $moduleName = 'test';
@@ -56,7 +56,6 @@ class RegisterViewTest extends \UnitTestCase
         $view->mockery_verify();
 
         $this->assertEquals($view, $dependencyInjection->get('view'));
-
 
     }
 }

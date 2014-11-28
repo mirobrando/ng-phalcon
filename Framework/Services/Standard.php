@@ -187,6 +187,6 @@ class Standard implements Services
         $load->execute($dependencyInjection);
 
         $dependencyInjection->get('config')->set('projectPath', json_encode($this->projectPath));
-        $dependencyInjection->get('config')->set('environment', $this->dev);
+        $dependencyInjection->get('config')->set('environment', $this->environment);
     }
 }
