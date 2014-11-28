@@ -61,7 +61,7 @@ class CreateControllerTask extends Task
         #view
         $viewPath =
             $this->getModulePath($projectPath, $moduleName)
-            . '/views/' . $controllerName . '/' . $actionName .'.volt';
+            . '/views/' . mb_strtolower($controllerName, 'UTF-8') . '/' . $actionName .'.volt';
         file_put_contents($viewPath, '{% extends "index.volt" %}');
     }
 
