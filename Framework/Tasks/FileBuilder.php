@@ -27,7 +27,7 @@ class FileBuilder
         }
 
         file_put_contents($path, '');
-        chmod($path, $mode);
+        @chmod($path, $mode);
 
         return $this;
     }
