@@ -119,7 +119,7 @@ class CreateModuleTask extends Task
         $fileName = $translateDir . '/en.php' ;
         $this->createFile($fileName);
         $this->writeLine($fileName, "<?php\n");
-        $this->writeLine($fileName, "\$messages = [\n];");
+        $this->writeLine($fileName, "return [\n];");
     }
 
     private function createModule($moduleDir, $moduleName)

@@ -53,7 +53,7 @@ class CreateControllerTask extends Task
         file_put_contents($controllerPath, "\t}\n\n", FILE_APPEND);
 
         #route
-        file_put_contents($routePath, sprintf("\n- pattern: %s\n", $route), FILE_APPEND);
+        file_put_contents($routePath, sprintf("\n- pattern: %s\n", mb_strtolower($route, 'UTF-8')), FILE_APPEND);
         file_put_contents($routePath, "  option:\n", FILE_APPEND);
         file_put_contents($routePath, sprintf("    controller: %s\n", $controllerName), FILE_APPEND);
         file_put_contents($routePath, sprintf("    action: %s\n", $actionName), FILE_APPEND);
