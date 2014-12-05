@@ -50,4 +50,3 @@ abstract class Module implements ModuleDefinitionInterface
         return new RegisterView(new View(), $dependencyInjection);
     }
 }
-

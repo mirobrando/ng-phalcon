@@ -9,6 +9,10 @@ class Check
 {
     const CACHE_FILE = '.logfile';
 
+    /**
+     * @var string
+     */
+    private $projectPath;
 
     /**
      * @var string
@@ -21,11 +25,13 @@ class Check
     private $cacheDir;
 
     /**
+     * @param string $projectPath
      * @param string $modulesPath
      * @param string $cacheDir
      */
-    public function __construct($modulesPath, $cacheDir)
+    public function __construct($projectPath, $modulesPath, $cacheDir)
     {
+        $this->projectPath = $projectPath;
         $this->modulesPath = $modulesPath;
         $this->cacheDir = $cacheDir;
     }
@@ -37,37 +43,59 @@ class Check
     {
         $data = $this->loadCache();
         $result = false;
-        try {
-            foreach ($this->modulesPath as $modulePath) {
-                $serviceFile = $modulePath . '/' . Module::SERVICE;
-                $result |= $this->checkFile($serviceFile, $data);
+        foreach ($this->getServicesPath() as $path) {
+            if ($this->isChangeConfigurationModule($path, $data)) {
+                $result = true;
+                //$this->saveCache();
+                break;
             }
-
-        } catch (\Exception $e) {
-            $result = true;
         }
 
-        if ($result) {
-            $this->saveCache($data);
+        return $result;
+    }
+
+    /**
+     * @return array
+     */
+    private function getServicesPath()
+    {
+        $result[] = $this->projectPath . '/' . Module::CONFIG;
+        foreach ($this->modulesPath as $modulePath) {
+            $result[] = $modulePath . '/' . Module::SERVICE;
         }
+
         return $result;
     }
 
 
     /**
-     * @param string $file
+     * @param string $servicesFile
      * @param array $data
      * @return bool
      */
-    private function checkFile($file, array &$data)
+    private function isChangeConfigurationModule($servicesFile, array $data)
     {
         $result = true;
-        if (array_key_exists($file, $data)) {
-            $result = filemtime($file) != $data[$file];
-            $data[$file] = filemtime($file);
+        if (array_key_exists($servicesFile, $data)) {
+            $result = (filemtime($servicesFile) != $data[$servicesFile]);
+        }
+
+        if (!$result) {
+            $result = $this->isChangeClassesModules($servicesFile, $data);
         }
 
         return $result;
+    }
+
+
+    /**
+     * @param string $servicesFile
+     * @param array $data
+     * @return bool
+     */
+    private function isChangeClassesModules($servicesFile, $data)
+    {
+
     }
 
 
@@ -81,7 +109,6 @@ class Check
     {
         return file_exists($this->cacheDir . '/' . self::CACHE_FILE);
     }
-
 
     /**
      * @return array

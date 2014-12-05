@@ -2,6 +2,7 @@
 
 namespace mirolabs\phalcon\Framework\Container\Parser\Model;
 
+use mirolabs\phalcon\Framework\Container\Parser\AnnotationParser;
 use mirolabs\phalcon\Framework\Container\Parser\AttributeParser;
 use mirolabs\phalcon\Framework\Container\Parser\DefinitionBuilder;
 use mirolabs\phalcon\Framework\Container\Parser\Output;
@@ -18,6 +19,11 @@ class Service implements Output
     protected $attributeParser;
 
     /**
+     * @var AnnotationParser
+     */
+    protected $annotationParser;
+
+    /**
      * @var string
      */
     protected $serviceName;
@@ -29,12 +35,18 @@ class Service implements Output
 
     /**
      * @param AttributeParser $attributeParser
-     * @param $serviceName
+     * @param AnnotationParser $annotationParser
+     * @param string $serviceName
      * @param array $values
      */
-    public function __construct(AttributeParser $attributeParser, $serviceName, array $values)
-    {
+    public function __construct(
+        AttributeParser $attributeParser,
+        AnnotationParser $annotationParser,
+        $serviceName,
+        array $values
+    ) {
         $this->attributeParser = $attributeParser;
+        $this->annotationParser = $annotationParser;
         $this->serviceName = $serviceName;
         $this->values = $values;
     }
@@ -49,6 +61,9 @@ class Service implements Output
         $definitionBuilder->writeLine(sprintf("\t\t\t'className' => '%s',", $this->getClassName()));
         $definitionBuilder->writeLine("\t\t\t'arguments' => [");
         $this->writeServiceArguments($definitionBuilder);
+        $definitionBuilder->writeLine("\t\t\t],");
+        $definitionBuilder->writeLine("\t\t\t'properties' => [");
+        $this->writeServiceProperties($definitionBuilder);
         $definitionBuilder->writeLine("\t\t\t]");
         $definitionBuilder->writeLine("\t\t]);");
     }
@@ -71,6 +86,23 @@ class Service implements Output
         $definitionBuilder->writeLine(implode(",\n", $argumentsService));
     }
 
+    private function writeServiceProperties(DefinitionBuilder $definitionBuilder)
+    {
+        $properties = [];
+        foreach ($this->annotationParser->getProperties($this->getClassName()) as $property) {
+            $definition = sprintf("\t\t\t\t\t'name' => '%s'\n", $property['name']);
+            if ($property['value']['type'] == 'service') {
+                $definition .= sprintf("\t\t\t\t\t['type' => 'service', 'name' => '%s'", $property['value']['name']);
+            } else {
+                $definition .= sprintf("\t\t\t\t\t['type' => 'parameter', 'value' => %s", $property['value']['value']);
+            }
+
+            $properties[] = sprintf(
+                "\t\t\t\t[\n%s\n\t\t\t\t], $definition"
+            );
+        }
+        $definitionBuilder->writeLine(implode(",\n", $properties));
+    }
 
     /**
      * @return string

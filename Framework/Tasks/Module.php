@@ -42,7 +42,7 @@ class Module extends Task
      */
     protected function getModulesPath($projectPath)
     {
-        return $projectPath . '/' .  CreateModuleTask::MODULES_DIR;
+        return $projectPath . '/' . CreateModuleTask::MODULES_DIR;
     }
 
     /**
@@ -73,5 +73,25 @@ class Module extends Task
         }
 
         return $modules;
+    }
+
+    /**
+     * @param $projectPath
+     * @param $moduleName
+     * @return bool
+     */
+    protected function isRouteAnnotation($projectPath, $moduleName)
+    {
+        return false;
+    }
+
+    /**
+     * @param $projectPath
+     * @param $moduleName
+     * @return string
+     */
+    protected function getRoutePath($projectPath, $moduleName)
+    {
+        return $projectPath . '/' . CreateModuleTask::MODULES_DIR . '/' . $moduleName . '/config/route.yml';
     }
 }

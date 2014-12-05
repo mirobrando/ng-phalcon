@@ -171,16 +171,14 @@ class Standard implements Services
     public function registerUserServices($dependencyInjection)
     {
         $cacheDir = $this->projectPath .'/' . Module::COMMON_CACHE;
-        $check = new Check($this->modulesPath, $cacheDir);
-        if ($this->environment == Application::ENVIRONMENT_DEV || !$check->isCacheExist()) {
-            if ($check->isChangeConfiguration()) {
-                $parser = new Parser(
-                    $this->modulesPath,
-                    $this->projectPath . '/' . Module::CONFIG,
-                    $cacheDir
-                );
-                $parser->execute();
-            }
+        //$check = new Check($this->modulesPath, $cacheDir);
+        if ($this->environment == Application::ENVIRONMENT_DEV) {
+            $parser = new Parser(
+                $this->modulesPath,
+                $this->projectPath . '/' . Module::CONFIG,
+                $cacheDir
+            );
+            $parser->execute();
         }
 
         $load = new Load($cacheDir);

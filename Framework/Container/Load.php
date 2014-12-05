@@ -4,6 +4,11 @@ namespace mirolabs\phalcon\Framework\Container;
 
 use Phalcon\DiInterface;
 
+/**
+ * Class Load
+ * @package mirolabs\phalcon\Framework\Container
+ * @codeCoverageIgnore
+ */
 class Load
 {
     /**

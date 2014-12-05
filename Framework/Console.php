@@ -107,4 +107,3 @@ class Console extends ConsoleApp
         return $data;
     }
 }
-
