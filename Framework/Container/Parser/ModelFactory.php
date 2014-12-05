@@ -54,7 +54,7 @@ class ModelFactory
             return new Factory($attributeParser, $annotation, $serviceName, $serviceParameters);
         }
 
-        return $this->getModelService($serviceName, $annotation, $serviceParameters, $attributeParser);
+        return $this->getModelService($serviceName, $serviceParameters, $attributeParser, $annotation);
     }
 
     /**
