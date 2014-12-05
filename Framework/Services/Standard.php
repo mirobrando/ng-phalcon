@@ -176,7 +176,8 @@ class Standard implements Services
             $parser = new Parser(
                 $this->modulesPath,
                 $this->projectPath . '/' . Module::CONFIG,
-                $cacheDir
+                $cacheDir,
+                $dependencyInjection->get('annotations')
             );
             $parser->execute();
         }
