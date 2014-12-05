@@ -31,13 +31,16 @@ class AnnotationParser
 
     /**
      * @param string $className
+     * @return array
      */
     public function getProperties($className)
     {
         $result = [];
         $properties = $this->annotationAdapter->getProperties($className);
-        foreach ($properties as $name => $property) {
-            $this->addPropertyDefinition($name, $property, $result);
+        if (is_array($properties)) {
+            foreach ($properties as $name => $property) {
+                $this->addPropertyDefinition($name, $property, $result);
+            }
         }
 
         return $result;

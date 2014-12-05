@@ -32,9 +32,9 @@ class CreateControllerTask extends Module
         $classBuilder = $this->getControllerFile($projectPath, $moduleName, $controllerName);
         $classBuilder
             ->createPhpFile()
-            ->createNamespace(sprintf("namespace %s\\controllers", $moduleName))
+            ->createNamespace(sprintf("%s\\controllers", $moduleName))
             ->createUses(['mirolabs\phalcon\Framework\Module\Controller'])
-            ->createClass(ucfirst($controllerName), 'Controller');
+            ->createClass(ucfirst($controllerName). 'Controller', 'Controller');
 
 
         foreach ($actions as $actionName => $route) {
