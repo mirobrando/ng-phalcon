@@ -9,7 +9,7 @@ class Controller extends PhalconController
 {
     public function onConstruct()
     {
-        $annotations = $this->$this->getDI()->get('annotations')->get($this);
+        $annotations = $this->getDI()->get('annotations')->get($this);
         foreach ($annotations->getPropertiesAnnotations() as $propertyName => $propertyAnnotation) {
             $this->setPropertyValue($propertyName, $propertyAnnotation);
         }
