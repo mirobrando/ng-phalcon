@@ -137,11 +137,11 @@ class Parser
     private function createParameters()
     {
         foreach ($this->modulesPath as $modulePath) {
-            $data = Yaml::parse($modulePath . '/' . Module::SERVICE);
+            $data = Yaml::parse(file_get_contents($modulePath . '/' . Module::SERVICE));
             $this->parseParameters($data[self::ATTRIBUTE_SERVICE_PARAMETERS]);
         }
 
-        $config = Yaml::parse($this->configPath);
+        $config = Yaml::parse(file_get_contents($this->configPath));
         if (is_array($config)) {
             $this->parseParameters($config);
         }
@@ -165,7 +165,7 @@ class Parser
     private function createServices()
     {
         foreach ($this->modulesPath as $modulePath) {
-            $data = Yaml::parse($modulePath . '/' . Module::SERVICE);
+            $data = Yaml::parse(file_get_contents($modulePath . '/' . Module::SERVICE));
             $this->parseServices($data[self::ATTRIBUTE_SERVICE_SERVICES]);
             if (array_key_exists(self::ATTRIBUTE_SERVICE_TASKS, $data)) {
                 $this->parseTasks($data[self::ATTRIBUTE_SERVICE_TASKS]);

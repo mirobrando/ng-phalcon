@@ -30,7 +30,7 @@ class Application extends \Phalcon\Mvc\Application
 
     protected function loadModules()
     {
-        $this->modules = Yaml::parse($this->projectPath. '/config/modules.yml');
+        $this->modules = Yaml::parse(file_get_contents($this->projectPath. '/config/modules.yml'));
         $this->registerModules($this->modules);
     }
 
