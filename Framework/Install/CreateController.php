@@ -2,9 +2,8 @@
 
 namespace mirolabs\phalcon\Framework\Install;
 
-
-use mirolabs\phalcon\Framework\Tasks\CreateControllerTask;
 use mirolabs\phalcon\Framework\Tasks\CreateModuleTask;
+use mirolabs\phalcon\Framework\Tasks\Module\CreateControllerTask;
 
 class CreateController
 {
