@@ -29,7 +29,7 @@ class CreateControllerTask extends Module
 
     public function createController($projectPath, $moduleName, $controllerName, $actions)
     {
-        $classBuilder = $this->getControllerFile($projectPath, $controllerName, $controllerName);
+        $classBuilder = $this->getControllerFile($projectPath, $moduleName, $controllerName);
         $classBuilder
             ->createPhpFile()
             ->createNamespace(sprintf("namespace %s\\controllers", $moduleName))
