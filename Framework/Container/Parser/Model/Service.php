@@ -90,15 +90,15 @@ class Service implements Output
     {
         $properties = [];
         foreach ($this->annotationParser->getProperties($this->getClassName()) as $property) {
-            $definition = sprintf("\t\t\t\t\t'name' => '%s'\n", $property['name']);
+            $definition = sprintf("\t\t\t\t\t'name' => '%s',\n", $property['name']);
             if ($property['value']['type'] == 'service') {
-                $definition .= sprintf("\t\t\t\t\t['type' => 'service', 'name' => '%s'", $property['value']['name']);
+                $definition .= sprintf("\t\t\t\t\t'value' => ['type' => 'service', 'name' => '%s']", $property['value']['name']);
             } else {
-                $definition .= sprintf("\t\t\t\t\t['type' => 'parameter', 'value' => %s", $property['value']['value']);
+                $definition .= sprintf("\t\t\t\t\t'value' => ['type' => 'parameter', 'value' => '%s']", $property['value']['value']);
             }
 
             $properties[] = sprintf(
-                "\t\t\t\t[\n%s\n\t\t\t\t], $definition"
+                "\t\t\t\t[\n%s\n\t\t\t\t]", $definition
             );
         }
         $definitionBuilder->writeLine(implode(",\n", $properties));
