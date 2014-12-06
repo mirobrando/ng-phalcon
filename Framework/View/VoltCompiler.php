@@ -49,7 +49,7 @@ class VoltCompiler extends Compiler
      */
     protected function getIndexTemplateFile($path)
     {
-        if ($this->getModuleViewsDir() . '/index.volt' == $path || $path == 'index.volt') {
+        if ($this->getModuleViewsDir() . 'index.volt' == $path || $path == 'index.volt') {
             return $this->getCommonViewPath($this->getModuleViewsDir() . '/index_deploy.volt');
         }
 
