@@ -2,6 +2,7 @@
 
 namespace mirolabs\phalcon\Framework\Container;
 
+use mirolabs\phalcon\Framework\Container\Parser\AnnotationParser;
 use mirolabs\phalcon\Framework\Container\Parser\AttributeParser;
 use mirolabs\phalcon\Framework\Container\Parser\DefinitionBuilder;
 use mirolabs\phalcon\Framework\Container\Parser\Model\Parameter;
@@ -9,6 +10,7 @@ use mirolabs\phalcon\Framework\Container\Parser\Model\Task;
 use mirolabs\phalcon\Framework\Container\Parser\ModelFactory;
 use mirolabs\phalcon\Framework\Module;
 use mirolabs\phalcon\Framework\Tasks\FileBuilder;
+use Phalcon\Annotations\Adapter;
 use Symfony\Component\Yaml\Yaml;
 
 class Parser
@@ -19,6 +21,11 @@ class Parser
     const ATTRIBUTE_SERVICE_PARAMETERS = 'parameters';
     const ATTRIBUTE_SERVICE_SERVICES = 'services';
     const ATTRIBUTE_SERVICE_TASKS = 'tasks';
+
+    /**
+     * @var Adapter
+     */
+    private $annotationAdapter;
 
     /**
      * @var string
@@ -56,6 +63,11 @@ class Parser
     private $attributeParser;
 
     /**
+     * @var AnnotationParser
+     */
+    private $annotationParser;
+
+    /**
      * @var ModelFactory
      */
     private $modelFactory;
@@ -64,12 +76,14 @@ class Parser
      * @param string $modulesPath
      * @param string $configPath
      * @param string $cacheDir
+     * @param Adapter $annotationAdapter
      */
-    public function __construct($modulesPath, $configPath, $cacheDir)
+    public function __construct($modulesPath, $configPath, $cacheDir, $annotationAdapter)
     {
         $this->modulesPath = $modulesPath;
         $this->configPath = $configPath;
         $this->cacheDir = $cacheDir;
+        $this->annotationAdapter = $annotationAdapter;
     }
 
     /**
@@ -110,13 +124,26 @@ class Parser
 
     /**
      * @codeCoverageIgnore
+     * @return AttributeParser
+     */
+    protected function getAnnotationParser()
+    {
+        if (is_null($this->annotationParser)) {
+            $this->annotationParser = new AnnotationParser($this->parameters, $this->annotationAdapter);
+        }
+
+        return $this->annotationParser;
+    }
+
+    /**
+     * @codeCoverageIgnore
      * @param $taskName
      * @param $taskParams
      * @return Task
      */
     protected function getTask($taskName, $taskParams)
     {
-        return new Task($this->getAttributeParser(), $taskName, $taskParams);
+        return new Task($this->getAttributeParser(), $this->getAnnotationParser(), $taskName, $taskParams);
     }
 
     /**
@@ -137,11 +164,11 @@ class Parser
     private function createParameters()
     {
         foreach ($this->modulesPath as $modulePath) {
-            $data = Yaml::parse($modulePath . '/' . Module::SERVICE);
+            $data = Yaml::parse(file_get_contents($modulePath . '/' . Module::SERVICE));
             $this->parseParameters($data[self::ATTRIBUTE_SERVICE_PARAMETERS]);
         }
 
-        $config = Yaml::parse($this->configPath);
+        $config = Yaml::parse(file_get_contents($this->configPath));
         if (is_array($config)) {
             $this->parseParameters($config);
         }
@@ -165,7 +192,7 @@ class Parser
     private function createServices()
     {
         foreach ($this->modulesPath as $modulePath) {
-            $data = Yaml::parse($modulePath . '/' . Module::SERVICE);
+            $data = Yaml::parse(file_get_contents($modulePath . '/' . Module::SERVICE));
             $this->parseServices($data[self::ATTRIBUTE_SERVICE_SERVICES]);
             if (array_key_exists(self::ATTRIBUTE_SERVICE_TASKS, $data)) {
                 $this->parseTasks($data[self::ATTRIBUTE_SERVICE_TASKS]);
@@ -184,7 +211,8 @@ class Parser
                 $this->servicesData[$serviceName] = $modelFactory->getServiceModel(
                     $serviceName,
                     $serviceParameters,
-                    $this->getAttributeParser()
+                    $this->getAttributeParser(),
+                    $this->getAnnotationParser()
                 );
             }
         }

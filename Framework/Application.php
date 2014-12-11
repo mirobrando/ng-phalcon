@@ -8,6 +8,9 @@ use Symfony\Component\Yaml\Yaml;
 
 class Application extends \Phalcon\Mvc\Application
 {
+    const ENVIRONMENT_DEV = 'dev';
+    const ENVIRONMENT_PROD = 'prod';
+
 
     /**
      * @var Yml
@@ -16,24 +19,24 @@ class Application extends \Phalcon\Mvc\Application
 
     private $projectPath;
 
-    private $dev;
+    private $environment;
 
-    public function __construct($projectPath, $dev = true)
+    public function __construct($projectPath, $environment = self::ENVIRONMENT_DEV)
     {
         $this->projectPath = $projectPath;
-        $this->dev = $dev;
+        $this->environment = $environment;
         parent::__construct();
     }
 
     protected function loadModules()
     {
-        $this->modules = Yaml::parse($this->projectPath. '/config/modules.yml');
+        $this->modules = Yaml::parse(file_get_contents($this->projectPath. '/config/modules.yml'));
         $this->registerModules($this->modules);
     }
 
     protected function loadServices()
     {
-        $services = new Standard($this->projectPath, $this->modules, $this->dev);
+        $services = new Standard($this->projectPath, $this->modules, $this->environment);
         $dependencyInjection = $services->createContainer();
         $services->setListenerManager($dependencyInjection);
         $services->registerUserServices($dependencyInjection);

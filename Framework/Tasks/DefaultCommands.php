@@ -71,7 +71,7 @@ class DefaultCommands
     protected function setCreateController(&$tasks)
     {
         $tasks['createController'] = [
-            'class' => 'mirolabs\phalcon\Framework\Tasks\CreateController',
+            'class' => 'mirolabs\phalcon\Framework\Tasks\Module\CreateController',
             'action' => 'run',
             'description' => 'create controller in project',
             'params' => [

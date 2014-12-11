@@ -1,6 +1,7 @@
 <?php
 namespace mirolabs\phalcon\Framework\Services;
 
+use mirolabs\phalcon\Framework\Application;
 use mirolabs\phalcon\Framework\Container\Check;
 use mirolabs\phalcon\Framework\Container\Load;
 use mirolabs\phalcon\Framework\Container\Parser;
@@ -20,11 +21,11 @@ class Standard implements Services
 
     private $projectPath;
 
-    private $dev;
+    private $environment;
 
-    public function __construct($projectPath, array $modules, $dev = true)
+    public function __construct($projectPath, array $modules, $environment)
     {
-        $this->dev = $dev;
+        $this->environment = $environment;
         $this->projectPath = $projectPath;
         foreach ($modules as $moduleName => $module) {
             preg_match('/([A-Za-z\/-]+)Module\.php/', $module['path'], $matches);
@@ -170,20 +171,20 @@ class Standard implements Services
     public function registerUserServices($dependencyInjection)
     {
         $cacheDir = $this->projectPath .'/' . Module::COMMON_CACHE;
-        $check = new Check($this->modulesPath, $cacheDir);
-        if ($this->dev || !$check->isCacheExist()) {
-            if ($check->isChangeConfiguration()) {
-                $parser = new Parser(
-                    $this->modulesPath,
-                    $this->projectPath . '/' . Module::CONFIG,
-                    $cacheDir
-                );
-                $parser->execute();
-            }
+        //$check = new Check($this->modulesPath, $cacheDir);
+        if ($this->environment == Application::ENVIRONMENT_DEV) {
+            $parser = new Parser(
+                $this->modulesPath,
+                $this->projectPath . '/' . Module::CONFIG,
+                $cacheDir,
+                $dependencyInjection->get('annotations')
+            );
+            $parser->execute();
         }
 
         $load = new Load($cacheDir);
         $load->execute($dependencyInjection);
         $dependencyInjection->get('config')->set('projectPath', json_encode($this->projectPath));
+        $dependencyInjection->get('config')->set('environment', json_encode($this->environment));
     }
 }
