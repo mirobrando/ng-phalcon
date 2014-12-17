@@ -13,7 +13,7 @@ class VoltCompiler extends Compiler
      */
     public function compile($path, $extendsMode = null)
     {
-        if ($extendsMode) {
+        if ($extendsMode || !file_exists($path)) {
             $path = $this->getExtendsTemplate($path);
         }
 
@@ -23,11 +23,12 @@ class VoltCompiler extends Compiler
 
     protected function getExtendsTemplate($path)
     {
-        $this->getManagementPath()->getTemplatePath(
+        $data = explode('.', str_replace($this->getView()->getViewsDir(), "", $path));
+        return $this->getManagementPath()->getTemplatePath(
             $this->getView()->getModuleName(),
             $this->getView()->getViewsDir(),
-            $path,
-            '.volt'
+            $data[0],
+            '.' . $data[1]
         );
     }
 
