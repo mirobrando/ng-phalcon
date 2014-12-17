@@ -4,6 +4,7 @@ namespace mirolabs\phalcon\Framework\Services;
 
 use mirolabs\phalcon\Framework\Application;
 use mirolabs\phalcon\Framework\Container\Load;
+use mirolabs\phalcon\Framework\Container\Parser;
 use mirolabs\phalcon\Framework\Module;
 use mirolabs\phalcon\Framework\Service;
 use mirolabs\phalcon\Framework\Type\RegisterService;

@@ -18,6 +18,16 @@ class View extends PhalconView
     }
 
     /**
+     * @return mixed
+     */
+    public function getModuleName()
+    {
+        return $this->moduleName;
+    }
+
+
+
+    /**
      * @return ManagementPath
      */
     private function getManagementPath()

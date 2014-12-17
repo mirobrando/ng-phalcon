@@ -35,7 +35,7 @@ class App
     protected function registerPlugins(RegisterService $registerService)
     {
         foreach ($this->plugins as $pluginClass) {
-            $this->registerPlugins(new $pluginClass, $registerService);
+            $this->registerPlugin(new $pluginClass, $registerService);
         }
     }
 

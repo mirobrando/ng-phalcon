@@ -5,7 +5,6 @@ namespace mirolabs\phalcon\Framework\View;
 
 use mirolabs\phalcon\Framework\Map;
 use Phalcon\DI;
-use Phalcon\Mvc\View\Engine\Volt;
 
 class RegisterView
 {
