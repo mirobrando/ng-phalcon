@@ -3,10 +3,8 @@
 namespace mirolabs\phalcon\Framework;
 
 use mirolabs\phalcon\Framework\View\RegisterView;
-use mirolabs\phalcon\Framework\View\VoltCompiler;
-use mirolabs\phalcon\Framework\Volt;
+use mirolabs\phalcon\Framework\View\View;
 use Phalcon\Mvc\ModuleDefinitionInterface;
-use Phalcon\Mvc\View;
 
 abstract class Module implements ModuleDefinitionInterface
 {

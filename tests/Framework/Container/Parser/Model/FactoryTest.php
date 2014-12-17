@@ -2,6 +2,7 @@
 
 namespace tests\mirolabs\phalcon\Framework\Container\Parser\Model;
 
+use mirolabs\phalcon\Framework\Container\Parser\AnnotationParser;
 use mirolabs\phalcon\Framework\Container\Parser\DefinitionBuilder;
 use mirolabs\phalcon\Framework\Container\Parser\Model\Factory;
 use org\bovigo\vfs\vfsStream;
@@ -46,7 +47,11 @@ class FactoryTest extends \UnitTestCase
                 ['type' => 'parameter', 'value' => 'value']
             );
 
-        $factory = new Factory($attributeParserMock, 'test.factory', $value);
+        $factory = new Factory(
+            $attributeParserMock,
+            new AnnotationParser([], $this->getAnnotationMock()),
+            'test.factory',
+            $value);
         $factory->writeDefinition(new DefinitionBuilder($this->file, $fileBuilderMock));
 
         $expectedResult =
@@ -57,6 +62,16 @@ class FactoryTest extends \UnitTestCase
         $this->assertEquals($expectedResult, file_get_contents($this->file));
         $fileBuilderMock->mockery_verify();
         $attributeParserMock->mockery_verify();
+    }
+
+    private function getAnnotationMock()
+    {
+        $annotationMock = \Mockery::mock('Phalcon\Annotations\Adapter');
+        $annotationMock
+            ->shouldReceive('getProperties')
+            ->andReturn([]);
+
+        return $annotationMock;
     }
 }
  

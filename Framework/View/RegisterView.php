@@ -5,7 +5,7 @@ namespace mirolabs\phalcon\Framework\View;
 
 use mirolabs\phalcon\Framework\Map;
 use Phalcon\DI;
-use Phalcon\Mvc\View;
+use Phalcon\Mvc\View\Engine\Volt;
 
 class RegisterView
 {
@@ -35,30 +35,27 @@ class RegisterView
      */
     public function register($moduleName, $modulePath)
     {
+        $this->view->setModuleName($moduleName);
         $this->view->setViewsDir($modulePath . '/views/');
-        $this->view->registerEngines([".volt" => $this->getVolt($moduleName)]);
+        $this->view->registerEngines([".volt" => $this->getVolt()]);
         $this->view->setRenderLevel(View::LEVEL_ACTION_VIEW);
         $this->dependencyInjection->set('view', $this->view);
 
     }
 
     /**
-     * @param string $moduleName
      * @return Volt
      */
-    protected function getVolt($moduleName)
+    protected function getVolt()
     {
         $config = $this->getConfig();
         $volt = new Volt($this->view, $this->dependencyInjection);
         $volt->setOptions([
-            VoltCompiler::OPTION_COMPILED_PATH      => $config->view->compiledPath,
-            VoltCompiler::OPTION_COMMON_VIEW        => $config->projectPath . 'common/views/',
-            VoltCompiler::OPTION_MODULE_NAME        => $moduleName,
-            VoltCompiler::OPTION_COMPILED_SEPARATOR => $config->view->compiledSeparator,
-            VoltCompiler::OPTION_ENVIRONMENT        => $config->environment,
-            VoltCompiler::OPTION_COMPILED_EXTENSION => $config->view->compiledExtension,
-            VoltCompiler::OPTION_COMPILE_ALWAYS     => $config->view->compileAlways,
-            VoltCompiler::OPTION_STAT               => $config->view->stat,
+            'compiledPath'      => $config->view->compiledPath,
+            'compiledSeparator' => $config->view->compiledSeparator,
+            'compiledExtension' => $config->view->compiledExtension,
+            'compileAlways'     => $config->view->compileAlways,
+            'stat'              => $config->view->stat,
         ]);
         $this->createVoltFunctions($volt);
         $this->createVoltFilters($volt);

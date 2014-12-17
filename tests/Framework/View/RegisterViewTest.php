@@ -11,7 +11,7 @@ class RegisterViewTest extends \UnitTestCase
 {
     public function testRegisterView()
     {
-        $view = \Mockery::mock('Phalcon\Mvc\View')->shouldDeferMissing()->makePartial();
+        $view = \Mockery::mock('mirolabs\phalcon\Framework\View\View')->shouldDeferMissing()->makePartial();
         $dependencyInjection = new DI();
         $modulePath = 'projectPath/modules';
         $moduleName = 'test';

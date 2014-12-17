@@ -3,7 +3,9 @@
 namespace mirolabs\phalcon\Framework;
 
 
+use mirolabs\phalcon\Framework\Services\Container\App;
 use mirolabs\phalcon\Framework\Services\Standard;
+use mirolabs\phalcon\Framework\Type\RegisterService;
 use Symfony\Component\Yaml\Yaml;
 
 class Application extends \Phalcon\Mvc\Application
@@ -36,16 +38,15 @@ class Application extends \Phalcon\Mvc\Application
 
     protected function loadServices()
     {
-        $services = new Standard($this->projectPath, $this->modules, $this->environment);
-        $dependencyInjection = $services->createContainer();
-        $services->setListenerManager($dependencyInjection);
-        $services->registerUserServices($dependencyInjection);
-        $services->setDb($dependencyInjection);
-        $services->setRouter($dependencyInjection);
-        $services->setUrl($dependencyInjection);
-        $services->setSession($dependencyInjection);
-        $services->setTranslation($dependencyInjection);
-        $this->setDI($dependencyInjection);
+        $registerService = new RegisterService();
+        $registerService
+            ->setProjectPath($this->projectPath)
+            ->setModules($this->modules)
+            ->setEnvironment($this->environment);
+
+        $app = new App();
+        $app->registerServices($registerService);
+        $this->setDI($registerService->getDependencyInjection());
     }
 
     public function main()

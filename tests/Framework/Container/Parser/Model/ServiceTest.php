@@ -2,6 +2,7 @@
 
 namespace tests\mirolabs\phalcon\Framework\Container\Parser\Model;
 
+use mirolabs\phalcon\Framework\Container\Parser\AnnotationParser;
 use mirolabs\phalcon\Framework\Container\Parser\DefinitionBuilder;
 use mirolabs\phalcon\Framework\Container\Parser\Model\Service;
 use org\bovigo\vfs\vfsStream;
@@ -34,7 +35,7 @@ class ServiceTest extends \UnitTestCase
 
         $attributeParserMock
             ->shouldReceive('getClassValue')
-            ->once()
+            ->twice()
             ->andReturn('test\Class');
 
         $attributeParserMock
@@ -45,7 +46,12 @@ class ServiceTest extends \UnitTestCase
                 ['type' => 'parameter', 'value' => 'value']
             );
 
-        $service = new Service($attributeParserMock, 'test.service', $value);
+        $service = new Service(
+            $attributeParserMock,
+            new AnnotationParser([], $this->getAnnotationMock()),
+            'test.service',
+            $value
+        );
         $service->writeDefinition(new DefinitionBuilder($this->file, $fileBuilderMock));
 
 
@@ -55,6 +61,8 @@ class ServiceTest extends \UnitTestCase
             "\t\t\t'arguments' => [\n" .
             "\t\t\t\t['type' => 'service', 'name' => 'service.reference'],\n" .
             "\t\t\t\t['type' => 'parameter', 'value' => 'value']\n" .
+            "\t\t\t],\n" .
+            "\t\t\t'properties' => [\n\n" .
             "\t\t\t]\n" .
             "\t\t]);\n";
 
@@ -63,6 +71,16 @@ class ServiceTest extends \UnitTestCase
         $attributeParserMock->mockery_verify();
 
 
+    }
+
+    private function getAnnotationMock()
+    {
+        $annotationMock = \Mockery::mock('Phalcon\Annotations\Adapter');
+        $annotationMock
+            ->shouldReceive('getProperties')
+            ->andReturn([]);
+
+        return $annotationMock;
     }
 }
  

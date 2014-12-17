@@ -3,7 +3,9 @@
 namespace mirolabs\phalcon\Framework;
 
 use mirolabs\phalcon\Framework\Container\Parser;
+use mirolabs\phalcon\Framework\Services\Container\Cli;
 use mirolabs\phalcon\Framework\Tasks\DefaultCommands;
+use mirolabs\phalcon\Framework\Type\RegisterService;
 use Phalcon\CLI\Console as ConsoleApp;
 use mirolabs\phalcon\Framework\Services\Console as ConsoleDi;
 use Symfony\Component\Yaml\Yaml;
@@ -17,15 +19,15 @@ class Console extends ConsoleApp
 
     private $projectPath;
 
-    private $dev;
+    private $environment;
 
     private $args;
 
-    public function __construct($args, $projectPath, $dev = true)
+    public function __construct($args, $projectPath, $environment = Application::ENVIRONMENT_DEV)
     {
         $this->args = $args;
         $this->projectPath = $projectPath;
-        $this->dev = $dev;
+        $this->environment = $environment;
         parent::__construct();
     }
 
@@ -37,13 +39,14 @@ class Console extends ConsoleApp
 
     protected function loadServices()
     {
-        $services = new ConsoleDi($this->projectPath, $this->modules, $this->dev);
-        $dependencyInjection = $services->createContainer();
-        $services->setListenerManager($dependencyInjection);
-        $services->registerUserServices($dependencyInjection);
-        $services->setDb($dependencyInjection);
-        $services->setTranslation($dependencyInjection);
-        $this->setDI($dependencyInjection);
+        $registerService = new RegisterService();
+        $registerService
+            ->setProjectPath($this->projectPath)
+            ->setModules($this->modules)
+            ->setEnvironment($this->environment);
+        $cli = new Cli();
+        $cli->registerServices($registerService);
+        $this->setDI($registerService->getDependencyInjection());
     }
 
     protected function getArguments()

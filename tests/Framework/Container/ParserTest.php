@@ -4,6 +4,7 @@ namespace tests\mirolabs\phalcon\Framework\Container;
 use mirolabs\phalcon\Framework\Container\Parser;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamWrapper;
+use Phalcon\Annotations\Annotation;
 use Phalcon\Config;
 use Phalcon\DiInterface;
 
@@ -37,7 +38,7 @@ class ParserTest extends \UnitTestCase
 
         $parser = \Mockery::mock(
             'mirolabs\phalcon\Framework\Container\Parser',
-            [[$this->module1, $this->module2], $this->configFile, 'cache']
+            [[$this->module1, $this->module2], $this->configFile, 'cache', \Mockery::mock('Phalcon\Annotations\Adapter')]
         )
             ->shouldAllowMockingProtectedMethods()
             ->makePartial();

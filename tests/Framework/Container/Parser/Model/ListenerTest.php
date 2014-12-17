@@ -2,6 +2,7 @@
 
 namespace tests\mirolabs\phalcon\Framework\Container\Parser\Model;
 
+use mirolabs\phalcon\Framework\Container\Parser\AnnotationParser;
 use mirolabs\phalcon\Framework\Container\Parser\DefinitionBuilder;
 use mirolabs\phalcon\Framework\Container\Parser\Model\Listener;
 use org\bovigo\vfs\vfsStream;
@@ -35,20 +36,26 @@ class ListenerTest extends \UnitTestCase
 
         $attributeParserMock
             ->shouldReceive('getClassValue')
-            ->once()
+            ->twice()
             ->andReturn('test\Class');
 
         $attributeParserMock
             ->shouldReceive('getArgumentValue')
             ->never();
 
-        $factory = new Listener($attributeParserMock, 'test.listener', $value);
+        $factory = new Listener(
+            $attributeParserMock,
+            new AnnotationParser([], $this->getAnnotationMock()),
+            'test.listener',
+            $value);
         $factory->writeDefinition(new DefinitionBuilder($this->file, $fileBuilderMock));
 
         $expectedResult =
             "\t\t\$di->set('test.listener', [\n" .
             "\t\t\t'className' => 'test\\Class',\n" .
             "\t\t\t'arguments' => [\n\n" .
+            "\t\t\t],\n" .
+            "\t\t\t'properties' => [\n\n" .
             "\t\t\t]\n" .
             "\t\t]);\n" .
             "\t\t\$di->get('listener')->attach('test.event', function(\$event, \$component) use (\$di) {\n" .
@@ -81,20 +88,27 @@ class ListenerTest extends \UnitTestCase
 
         $attributeParserMock
             ->shouldReceive('getClassValue')
-            ->once()
+            ->twice()
             ->andReturn('test\Class');
 
         $attributeParserMock
             ->shouldReceive('getArgumentValue')
             ->never();
 
-        $factory = new Listener($attributeParserMock, 'test.listener', $value);
+        $factory = new Listener(
+            $attributeParserMock,
+            new AnnotationParser([], $this->getAnnotationMock()),
+            'test.listener',
+            $value
+        );
         $factory->writeDefinition(new DefinitionBuilder($this->file, $fileBuilderMock));
 
         $expectedResult =
             "\t\t\$di->set('test.listener', [\n" .
             "\t\t\t'className' => 'test\\Class',\n" .
             "\t\t\t'arguments' => [\n\n" .
+            "\t\t\t],\n" .
+            "\t\t\t'properties' => [\n\n" .
             "\t\t\t]\n" .
             "\t\t]);\n" .
             "\t\t\$di->get('listener')->attach('test.event', function(\$event, \$component) use (\$di) {\n" .
@@ -108,6 +122,16 @@ class ListenerTest extends \UnitTestCase
         $fileBuilderMock->mockery_verify();
         $attributeParserMock->mockery_verify();
 
+    }
+
+    private function getAnnotationMock()
+    {
+        $annotationMock = \Mockery::mock('Phalcon\Annotations\Adapter');
+        $annotationMock
+            ->shouldReceive('getProperties')
+            ->andReturn([]);
+
+        return $annotationMock;
     }
 
 }

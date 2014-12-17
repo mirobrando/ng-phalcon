@@ -2,6 +2,7 @@
 
 namespace tests\mirolabs\phalcon\Framework\Container\Parser\Model;
 
+use mirolabs\phalcon\Framework\Container\Parser\AnnotationParser;
 use mirolabs\phalcon\Framework\Container\Parser\Model\Task;
 
 class TaskTest extends \UnitTestCase
@@ -41,7 +42,11 @@ class TaskTest extends \UnitTestCase
             ->andReturn(['type' => 'parameter', 'value' => 'value']);
 
 
-        $task = new Task($attributeParserMock, 'task.test', $value);
+        $task = new Task(
+            $attributeParserMock,
+            new AnnotationParser([], \Mockery::mock('Phalcon\Annotations\Adapter')),
+            'task.test',
+            $value);
         $expectedResult = [
             'class' => 'test\Task',
             'action' => 'callTask',
@@ -90,7 +95,11 @@ class TaskTest extends \UnitTestCase
             ->andReturn(['type' => 'parameter', 'value' => 'value']);
 
 
-        $task = new Task($attributeParserMock, 'task.test', $value);
+        $task = new Task(
+            $attributeParserMock,
+            new AnnotationParser([], \Mockery::mock('Phalcon\Annotations\Adapter')),
+            'task.test',
+            $value);
         $expectedResult = [
             'class' => 'test\Task',
             'action' => 'callTask',
