@@ -225,7 +225,7 @@ class Parser
     {
         if (is_array($tasks)) {
             foreach ($tasks as $taskName => $taskParams) {
-                $this->tasks[] = $this->getTask($taskName, $taskParams)->getTaskValue();
+                $this->tasks[$taskName] = $this->getTask($taskName, $taskParams)->getTaskValue();
             }
         }
     }

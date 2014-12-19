@@ -3,6 +3,7 @@
 namespace mirolabs\phalcon\Framework\Services;
 
 use mirolabs\phalcon\Framework\Application;
+use mirolabs\phalcon\Framework\Container\Check;
 use mirolabs\phalcon\Framework\Container\Load;
 use mirolabs\phalcon\Framework\Container\Parser;
 use mirolabs\phalcon\Framework\Module;
@@ -19,7 +20,7 @@ class UserServices implements Service
     public function register(RegisterService $registerService)
     {
         $cacheDir = $registerService->getProjectPath() .'/' . Module::COMMON_CACHE;
-        if ($registerService->getEnvironment() == Application::ENVIRONMENT_DEV) {
+        if ($this->getCheck($registerService)->isChangeConfiguration()) {
             $parser = new Parser(
                 $registerService->getModulesPath(),
                 $registerService->getProjectPath() . '/' . Module::CONFIG,
@@ -34,5 +35,18 @@ class UserServices implements Service
         $config = $registerService->getDependencyInjection()->get('config');
         $config->set('projectPath', json_encode($registerService->getProjectPath()));
         $config->set('environment', json_encode($registerService->getEnvironment()));
+    }
+
+    /**
+     * @param RegisterService $registerService
+     * @return Check
+     */
+    private function getCheck(RegisterService $registerService)
+    {
+        return new Check(
+            $registerService->getProjectPath(),
+            $registerService->getModules(),
+            $registerService->getEnvironment()
+        );
     }
 }
