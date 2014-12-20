@@ -112,11 +112,15 @@ class Check
      */
     private function isChangedFile($filePath, array $data)
     {
-        if (is_dir($filePath)) {
-            return $this->isChangedFilesInFolder($filePath, $data);
+        if (file_exists($filePath)) {
+            if (is_dir($filePath)) {
+                return $this->isChangedFilesInFolder($filePath, $data);
+            }
+
+            return !(array_key_exists($filePath, $data) && filemtime($filePath) == $data[$filePath]);
         }
 
-        return !(array_key_exists($filePath, $data) && filemtime($filePath) == $data[$filePath]);
+        return false;
     }
 
     /**
@@ -206,10 +210,14 @@ class Check
      */
     private function createCacheForFile($filePath)
     {
-        if (is_dir($filePath)) {
-            return $this->createCacheForFolder($filePath);
+        if (file_exists($filePath)) {
+            if (is_dir($filePath)) {
+                return $this->createCacheForFolder($filePath);
+            }
+
+            return [$filePath => filemtime($filePath)];
         }
 
-        return [$filePath => filemtime($filePath)];
+        return [];
     }
 }

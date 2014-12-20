@@ -45,7 +45,7 @@ class UserServices implements Service
     {
         return new Check(
             $registerService->getProjectPath(),
-            $registerService->getModules(),
+            $registerService->getModulesPath(),
             $registerService->getEnvironment()
         );
     }

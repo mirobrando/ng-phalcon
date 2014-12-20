@@ -28,7 +28,8 @@ class CheckTest extends \UnitTestCase
         $this->projectPath = 'vfs://root/';
         $this->modules = [
             'test' => 'vfs://root/modules/test/',
-            'demo' => 'vfs://root/modules/demo/'
+            'demo' => 'vfs://root/modules/demo/',
+            'fail'=> 'vfs://root/modules/fail/'
         ];
         parent::setUp($di, $config);
     }
@@ -134,7 +135,8 @@ class CheckTest extends \UnitTestCase
                     'config' => [],
                     'controllers' => [],
                     'services' => []
-                ]
+                ],
+                'fail' => []
             ],
         ];
         vfsStream::create($structure);
