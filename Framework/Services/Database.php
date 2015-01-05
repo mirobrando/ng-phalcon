@@ -4,6 +4,7 @@ namespace mirolabs\phalcon\Framework\Services;
 
 use mirolabs\phalcon\Framework\Service;
 use mirolabs\phalcon\Framework\Type\RegisterService;
+use Phalcon\Db\Adapter\Pdo\Mysql as DbAdapter;
 
 class Database implements Service
 {
@@ -19,9 +20,12 @@ class Database implements Service
         $registerService->getDependencyInjection()->set('db', function () use ($config) {
             return new DbAdapter([
                 'host' => $config->database->host,
+                'port' => $config->database->port,
                 'username' => $config->database->username,
                 'password' => $config->database->password,
-                'dbname' => $config->database->dbname
+                'dbname' => $config->database->dbname,
+                'charset' => $config->database->charset
+
             ]);
 
         });

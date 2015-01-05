@@ -30,11 +30,11 @@ class Listener extends Service implements Output
     protected function writeEventDefinition(DefinitionBuilder $definitionBuilder, $eventName, $eventMethod)
     {
         $definitionBuilder->writeLine(sprintf(
-            "\t\t\$di->get('listener')->attach('%s', function(\$event, \$component) use (\$di) {",
+            "\t\t\$di->get('listener')->attach('%s', function(\$event, \$component, \$param) use (\$di) {",
             $eventName
         ));
         $definitionBuilder->writeLine(sprintf(
-            "\t\t\t\$di->get('%s')->%s(\$event, \$component);",
+            "\t\t\t\$di->get('%s')->%s(\$event, \$component, \$param);",
             $this->serviceName,
             $eventMethod
         ));
