@@ -13,8 +13,9 @@ class VoltCompiler extends Compiler
      */
     public function compile($path, $extendsMode = null)
     {
-        if ($extendsMode || !file_exists($path)) {
-            $path = $this->getExtendsTemplate($path);
+        $tmp_path = $this->getExtendsTemplate($path);
+        if (file_exists($tmp_path)) {
+            $path = $tmp_path;
         }
 
         return parent::compile($path, $extendsMode);

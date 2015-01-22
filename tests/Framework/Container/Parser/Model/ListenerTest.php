@@ -58,8 +58,8 @@ class ListenerTest extends \UnitTestCase
             "\t\t\t'properties' => [\n\n" .
             "\t\t\t]\n" .
             "\t\t]);\n" .
-            "\t\t\$di->get('listener')->attach('test.event', function(\$event, \$component) use (\$di) {\n" .
-            "\t\t\t\$di->get('test.listener')->subscribe(\$event, \$component);\n" .
+            "\t\t\$di->get('listener')->attach('test.event', function(\$event, \$component, \$param) use (\$di) {\n" .
+            "\t\t\t\$di->get('test.listener')->subscribe(\$event, \$component, \$param);\n" .
             "\t\t});\n";
 
         $this->assertEquals($expectedResult, file_get_contents($this->file));
@@ -111,11 +111,11 @@ class ListenerTest extends \UnitTestCase
             "\t\t\t'properties' => [\n\n" .
             "\t\t\t]\n" .
             "\t\t]);\n" .
-            "\t\t\$di->get('listener')->attach('test.event', function(\$event, \$component) use (\$di) {\n" .
-            "\t\t\t\$di->get('test.listener')->subscribe(\$event, \$component);\n" .
+            "\t\t\$di->get('listener')->attach('test.event', function(\$event, \$component, \$param) use (\$di) {\n" .
+            "\t\t\t\$di->get('test.listener')->subscribe(\$event, \$component, \$param);\n" .
             "\t\t});\n" .
-            "\t\t\$di->get('listener')->attach('test.secondEvent', function(\$event, \$component) use (\$di) {\n" .
-            "\t\t\t\$di->get('test.listener')->subscribe(\$event, \$component);\n" .
+            "\t\t\$di->get('listener')->attach('test.secondEvent', function(\$event, \$component, \$param) use (\$di) {\n" .
+            "\t\t\t\$di->get('test.listener')->subscribe(\$event, \$component, \$param);\n" .
             "\t\t});\n";
 
         $this->assertEquals($expectedResult, file_get_contents($this->file));
