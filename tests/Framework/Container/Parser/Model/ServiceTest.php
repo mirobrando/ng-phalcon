@@ -64,7 +64,7 @@ class ServiceTest extends \UnitTestCase
             "\t\t\t],\n" .
             "\t\t\t'properties' => [\n\n" .
             "\t\t\t]\n" .
-            "\t\t]);\n";
+            "\t\t], true);\n";
 
         $this->assertEquals($expectedResult, file_get_contents($this->file));
         $fileBuilderMock->mockery_verify();
