@@ -5,6 +5,7 @@ namespace mirolabs\phalcon\Framework;
 use mirolabs\phalcon\Framework\View\RegisterView;
 use mirolabs\phalcon\Framework\View\View;
 use Phalcon\Mvc\ModuleDefinitionInterface;
+use Phalcon\DiInterface;
 
 abstract class Module implements ModuleDefinitionInterface
 {
@@ -20,7 +21,7 @@ abstract class Module implements ModuleDefinitionInterface
     /**
      * Registers the module auto-loader
      */
-    public function registerAutoloaders()
+    public function registerAutoloaders(DiInterface $dependencyInjector = NULL)
     {
     }
 
@@ -29,7 +30,7 @@ abstract class Module implements ModuleDefinitionInterface
      *
      * @param Phalcon\DI $dependencyInjection
      */
-    public function registerServices($dependencyInjection)
+    public function registerServices(DiInterface $dependencyInjection)
     {
         $registerView = $this->getRegisterView($dependencyInjection);
         $registerView->register(

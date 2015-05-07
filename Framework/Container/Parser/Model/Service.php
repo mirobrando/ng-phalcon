@@ -65,7 +65,7 @@ class Service implements Output
         $definitionBuilder->writeLine("\t\t\t'properties' => [");
         $this->writeServiceProperties($definitionBuilder);
         $definitionBuilder->writeLine("\t\t\t]");
-        $definitionBuilder->writeLine("\t\t], true);");
+        $definitionBuilder->writeLine("\t\t]);");
     }
 
     private function writeServiceArguments(DefinitionBuilder $definitionBuilder)

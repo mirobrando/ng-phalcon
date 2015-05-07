@@ -3,6 +3,7 @@
 namespace mirolabs\phalcon\Framework\View;
 
 use Phalcon\Mvc\View as PhalconView;
+use Phalcon\Cache\BackendInterface;
 
 class View extends PhalconView
 {
@@ -34,8 +35,7 @@ class View extends PhalconView
     {
         return $this->getDI()->get('managementPath');
     }
-
-    protected function _engineRender($engines , $viewPath , $silence, $mustClean, $cache)
+    protected function _engineRender($engines, $viewPath, $silence, $mustClean, BackendInterface $cache = NULL)
     {
         $notExists = true;
         $viewsDir = $this->_viewsDir;
