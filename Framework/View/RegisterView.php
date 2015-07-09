@@ -78,6 +78,21 @@ class RegisterView
         $volt->getCompiler()->addFunction('ng', function ($input) {
             return '"{{".' . $input . '."}}"';
         });
+        $volt->getCompiler()->addFilter('raw', function ($resolvedArgs, $exprArgs) {
+            return 'html_entity_decode(' . $resolvedArgs . ')';
+        });
+
+        $volt->getCompiler()->addFilter('netto', function ($resolvedArgs, $exprArgs) {
+            return 'number_format(' . $resolvedArgs . '["netto"], 2, ",", " ") . " " . ' . $resolvedArgs . '["currency"]';
+        });
+
+        $volt->getCompiler()->addFilter('brutto', function ($resolvedArgs, $exprArgs) {
+            return 'number_format(' . $resolvedArgs . '["brutto"], 2, ",", " ") . " " . ' . $resolvedArgs . '["currency"]';
+        });
+
+        $volt->getCompiler()->addFilter('price', function ($resolvedArgs, $exprArgs) {
+            return 'number_format(' . $resolvedArgs . ', 2, ",", " ")';
+        });
     }
 
     /**
