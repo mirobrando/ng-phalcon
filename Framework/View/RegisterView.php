@@ -78,6 +78,23 @@ class RegisterView
         $volt->getCompiler()->addFunction('ng', function ($input) {
             return '"{{".' . $input . '."}}"';
         });
+
+        //$volt->getCompiler()->addFunction('dump', 'print_r');
+        $volt->getCompiler()->addFunction('pre', function ($input) {
+            return '"<pre style=\'font-size:12px\'>" . print_r(' . $input . ', 1) . "</pre>"';
+        });
+        $volt->getCompiler()->addFunction('js', function ($input) {
+            //return 'htmlspecialchars(json_encode(' . $input . '))';
+            return 'json_encode(' . $input . ')';
+        });
+    }
+
+    /**
+     * @SuppressWarnings(PHPMD.UnusedLocalVariable)
+     * @param Volt $volt
+     */
+    protected function createVoltFilters($volt)
+    {
         $volt->getCompiler()->addFilter('raw', function ($resolvedArgs, $exprArgs) {
             return 'html_entity_decode(' . $resolvedArgs . ')';
         });
@@ -92,17 +109,6 @@ class RegisterView
 
         $volt->getCompiler()->addFilter('price', function ($resolvedArgs, $exprArgs) {
             return 'number_format(' . $resolvedArgs . ', 2, ",", " ")';
-        });
-    }
-
-    /**
-     * @SuppressWarnings(PHPMD.UnusedLocalVariable)
-     * @param Volt $volt
-     */
-    protected function createVoltFilters($volt)
-    {
-        $volt->getCompiler()->addFilter('raw', function ($resolvedArgs, $exprArgs) {
-            return 'html_entity_decode(' . $resolvedArgs . ')';
         });
     }
 
