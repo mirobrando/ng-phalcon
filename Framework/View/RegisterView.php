@@ -95,7 +95,7 @@ class RegisterView
      */
     protected function createVoltFilters($volt)
     {
-        $volt->getCompiler()->addFilter('raw', function ($resolvedArgs, $exprArgs) {
+        $volt->getCompiler()->addFilter('araw', function ($resolvedArgs, $exprArgs) {
             return 'html_entity_decode(' . $resolvedArgs . ')';
         });
 
