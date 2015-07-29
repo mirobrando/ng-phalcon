@@ -27,10 +27,15 @@ class Translation
 
         $config = $dispatcher->getDI()->get('config');
         $translations = $this->getMessages($config->projectPath . 'common/');
-        $translations = array_merge(
-            $translations,
-            $this->getMessages($modules[$dispatcher->getModuleName()])
-        );
+        if (!is_array($translations)) {
+            $translations = [];
+        }
+        
+        $translationsModule = $this->getMessages($modules[$dispatcher->getModuleName()]);
+        if (!is_array($translationsModule)) {
+            $translationsModule = [];
+        }
+        $translations = array_merge($translations, $translationsModule);
 
         $this->translate =  new NativeArray([
             'content' => $translations
