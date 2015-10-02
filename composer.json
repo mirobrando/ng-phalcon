@@ -15,7 +15,6 @@
     "require": {
         "php": ">=5.4",
         "ext-phalcon": ">=1.2.4",
-        "symfony/yaml": "2.*",
         "mirolabs/console-reader": "dev-master"
     },
     "require-dev": {

@@ -30,10 +30,18 @@ class Application extends \Phalcon\Mvc\Application
         parent::__construct();
     }
 
+    protected function createLogger()
+    {
+        Logger::$StartTime = microtime(true);
+        Logger::$ConfigPath = $this->projectPath. '/config/config.yml';
+        Logger::getInstance()->debug("Start request");
+    }
+    
     protected function loadModules()
     {
         $this->modules = Yaml::parse(file_get_contents($this->projectPath. '/config/modules.yml'));
         $this->registerModules($this->modules);
+        Logger::getInstance()->debug("Loaded modules");
     }
 
     protected function loadServices()
@@ -47,23 +55,28 @@ class Application extends \Phalcon\Mvc\Application
         $app = new App();
         $app->registerServices($registerService);
         $this->setDI($registerService->getDependencyInjection());
+        Logger::getInstance()->debug("Loaded services");
     }
 
     public function main()
     {
         try {
+            $this->createLogger();
             $this->loadModules();
             $this->loadServices();
             echo $this->handle()->getContent();
+            Logger::getInstance()->debug("Stop request");
         } catch (Phalcon\Mvc\Dispatcher\Exception $e) {
+            Logger::getInstance()->criticalException($e);
             $response = new \Phalcon\Http\Response();
             $response->setStatusCode(400, 'Bad Request');
             $response->send();
         } catch (Phalcon\Exception $e) {
-            echo $e->getMessage();
+            Logger::getInstance()->criticalException($e);
         } catch (PDOException $e) {
-            echo $e->getMessage();
+            Logger::getInstance()->criticalException($e);
+        } catch (\Exception $e) {
+            Logger::getInstance()->criticalException($e);
         }
-
     }
 }
