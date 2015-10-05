@@ -5,6 +5,7 @@ namespace mirolabs\phalcon\Framework\Container;
 
 use mirolabs\phalcon\Framework\Application;
 use mirolabs\phalcon\Framework\Module;
+use mirolabs\phalcon\Framework\Logger;
 
 class Check
 {
@@ -50,7 +51,7 @@ class Check
         if ($result) {
             $this->saveCache($this->createNewCache());
         }
-
+        Logger::getInstance()->debug("checked file changes");
         return $result;
     }
 
@@ -63,10 +64,11 @@ class Check
         $result = false;
         if ($this->environment != Application::ENVIRONMENT_PROD) {
             $data = $this->loadCache();
+
+            
             $result =   $this->isChangedFile($this->projectPath . Module::CONFIG, $data) ||
                         $this->isChangedModule($this->modulesPath, $data);
         }
-
         return $result;
     }
 
@@ -82,11 +84,11 @@ class Check
         }
 
         $modulePath = array_pop($modules);
-
-        return
-            $this->isChangedFile($modulePath . Module::SERVICE, $data) ||
-            $this->isChangedFile($modulePath . 'services/', $data) ||
-            $this->isChangedModule($modules, $data);
+        $result = false;
+        if (strpos($modulePath, $this->projectPath . 'vendor') !== 0) {
+            $result = $this->isChangedFilesInFolder($modulePath, $data);
+        }
+        return $result || $this->isChangedModule($modules, $data);
     }
 
     private function isChangedFilesInFolder($folder, array $data)
@@ -115,14 +117,17 @@ class Check
         if (file_exists($filePath)) {
             if (is_dir($filePath)) {
                 return $this->isChangedFilesInFolder($filePath, $data);
+            } 
+            if (strpos($filePath, '.php') !== strlen($filePath) - 4) {
+                return true;
             }
-
             return !(array_key_exists($filePath, $data) && filemtime($filePath) == $data[$filePath]);
         }
 
         return false;
     }
 
+    
     /**
      * @return string
      */
@@ -214,7 +219,9 @@ class Check
             if (is_dir($filePath)) {
                 return $this->createCacheForFolder($filePath);
             }
-
+            if (strpos($filePath, '.php') !== strlen($filePath) - 4) {
+                return [];
+            }            
             return [$filePath => filemtime($filePath)];
         }
 

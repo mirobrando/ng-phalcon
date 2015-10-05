@@ -157,7 +157,7 @@ class Logger
         $message = "EMPTY MESSAGE";
         if (count($params) > 0) {
             $messagePattern = array_shift($params);
-            $message = sprintf($messagePattern, $params);
+            $message = vsprintf($messagePattern, $params);
         }
 
         return sprintf("%s m[%.6f]", $message, microtime(true) - self::$StartTime);

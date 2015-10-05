@@ -2,11 +2,12 @@
 
 namespace mirolabs\phalcon\Framework;
 
-
+use mirolabs\phalcon\Framework\Compile\Parser;
 use mirolabs\phalcon\Framework\Services\Container\App;
 use mirolabs\phalcon\Framework\Services\Standard;
 use mirolabs\phalcon\Framework\Type\RegisterService;
-use Symfony\Component\Yaml\Yaml;
+use Phalcon\Config\Adapter\Yaml;
+use Phalcon\DI\FactoryDefault;
 
 class Application extends \Phalcon\Mvc\Application
 {
@@ -39,10 +40,22 @@ class Application extends \Phalcon\Mvc\Application
     
     protected function loadModules()
     {
-        $this->modules = Yaml::parse(file_get_contents($this->projectPath. '/config/modules.yml'));
+        $config = new Yaml($this->projectPath. '/config/modules.yml');
+        $this->modules = $config->toArray();
         $this->registerModules($this->modules);
-        Logger::getInstance()->debug("Loaded modules");
+        Logger::getInstance()->debug("Register modules");
     }
+
+    protected function compileAnnotations($di)
+    {
+        $parser = new Parser($this->projectPath, $this->modules, $di->get('annotations'));
+        
+        //todo check
+        $parser->execute();
+                
+        Logger::getInstance()->debug("Complied annotations");
+    }
+
 
     protected function loadServices()
     {
@@ -51,7 +64,7 @@ class Application extends \Phalcon\Mvc\Application
             ->setProjectPath($this->projectPath)
             ->setModules($this->modules)
             ->setEnvironment($this->environment);
-
+        
         $app = new App();
         $app->registerServices($registerService);
         $this->setDI($registerService->getDependencyInjection());
@@ -61,8 +74,10 @@ class Application extends \Phalcon\Mvc\Application
     public function main()
     {
         try {
+            $di = new FactoryDefault();
             $this->createLogger();
             $this->loadModules();
+            $this->compileAnnotations($di);
             $this->loadServices();
             echo $this->handle()->getContent();
             Logger::getInstance()->debug("Stop request");
