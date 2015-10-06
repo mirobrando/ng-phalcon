@@ -14,8 +14,7 @@ class AnnotationParser {
      */
     private $reflection;
     
-    public function __construct(Reflection $reflection)
-    {
+    public function __construct(Reflection $reflection) {
         $this->reflection = $reflection;
     }
     
@@ -51,6 +50,20 @@ class AnnotationParser {
                 if ($list->find(function (Annotation $annotation) use ($annotationName) {
                         return $annotation->getName() == $annotationName; }) != null) {
                     $result[$field] = $list;        
+                }
+            }
+        }
+        return $result;
+    }
+    
+    public function getMethods($annotationName) {
+        $result = [];
+        if ($this->reflection->getMethodsAnnotations () !== false) {
+            foreach($this->reflection->getMethodsAnnotations () as $method=>$annotations) {
+                $list = ArrayList::create($annotations->getAnnotations());
+                if ($list->find(function (Annotation $annotation) use ($annotationName) {
+                        return $annotation->getName() == $annotationName; }) != null) {
+                    $result[$method] = $list;        
                 }
             }
         }

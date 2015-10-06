@@ -55,6 +55,7 @@ class Parser {
         $this->cacheDir = $projectPath . Module::COMMON_CACHE;
         $this->annotationAdapter = $annotationAdapter;
         $this->addPlugin(new Plugin\Service());
+        $this->addPlugin(new Plugin\Listener());
     }
     
     public function execute() {
