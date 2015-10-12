@@ -6,10 +6,10 @@ use Phalcon\Annotations\Annotation;
 use mirolabs\phalcon\Framework\Compile\AnnotationParser as AnnotationParser;
 use mirolabs\phalcon\Framework\Compile\Plugin\Listener as PluginListener;
 use mirolabs\phalcon\Framework\Compile\Plugin\Service as PluginService;
+use mirolabs\phalcon\Framework\Logger;
 use mirolabs\collection\ArrayList;
 
-class Listener 
-{
+class Listener {
     /**
      *
      * @var AnnotationParser
@@ -46,7 +46,7 @@ class Listener
         foreach ($this->annotationParser->getMethods(PluginListener::EVENT_ANNOTATION) as $method => $list) {
             $eventName = $this->findEventName($list);
             if (is_null($eventName)) {
-                Logger::getInstance()->warning("Annotation Listener must have event name @Listener('event.name)'");
+                \mirolabs\phalcon\Framework\Logger::getInstance()->warning("Annotation Listener must have event name @Listener('event.name)'");
                 continue;
             }
             

@@ -5,6 +5,7 @@ namespace mirolabs\phalcon\Framework\View;
 
 use mirolabs\phalcon\Framework\Map;
 use Phalcon\DI;
+use Phalcon\Mvc\View as PhalconView;
 
 class RegisterView
 {
@@ -22,7 +23,7 @@ class RegisterView
      * @param View $view
      * @param DI $dependencyInjection
      */
-    public function __construct(View $view, DI $dependencyInjection)
+    public function __construct($view, DI $dependencyInjection)
     {
         $this->dependencyInjection = $dependencyInjection;
         $this->view = $view;
@@ -32,14 +33,12 @@ class RegisterView
      * @param string $moduleName
      * @param string $modulePath
      */
-    public function register($moduleName, $modulePath)
-    {
-        $this->view->setModuleName($moduleName);
+    public function register($moduleName, $modulePath) {
         $this->view->setViewsDir($modulePath . '/views/');
         $this->view->registerEngines([".volt" => $this->getVolt()]);
-        $this->view->setRenderLevel(View::LEVEL_ACTION_VIEW);
+        $this->view->setLayoutsDir('/../common/views');
+        $this->view->setRenderLevel(PhalconView::LEVEL_ACTION_VIEW);
         $this->dependencyInjection->set('view', $this->view);
-
     }
 
     /**

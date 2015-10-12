@@ -56,6 +56,7 @@ class Parser {
         $this->annotationAdapter = $annotationAdapter;
         $this->addPlugin(new Plugin\Service());
         $this->addPlugin(new Plugin\Listener());
+        $this->addPlugin(new Plugin\Route());
     }
     
     public function execute() {

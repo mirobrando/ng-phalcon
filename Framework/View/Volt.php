@@ -6,9 +6,11 @@ use Phalcon\Mvc\View\Engine\Volt as PhalconVolt;
 
 class Volt extends PhalconVolt
 {
+    
     /**
      * @return VoltCompiler
      */
+    /**
     public function getCompiler()
     {
         if (!$this->_compiler) {
@@ -18,5 +20,5 @@ class Volt extends PhalconVolt
         }
 
         return $this->_compiler;
-    }
+    }*/
 }

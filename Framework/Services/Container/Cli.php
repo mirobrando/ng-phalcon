@@ -18,8 +18,6 @@ class Cli extends App
 
     public function registerServices(RegisterService $registerService)
     {
-
-
         $di = new CliDi();
         $view = new ConsoleView();
         $view->setModuleName('cli');

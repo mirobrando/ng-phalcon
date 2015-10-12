@@ -73,7 +73,8 @@ class Service {
     
     private function getHeader() 
     {
-        $result = sprintf("\t\t\$di->setRaw(new \mirolabs\phalcon\Framework\Container\Service('%s', [\n", $this->getServiceName());
+        $result = sprintf("\t\t\$di->setRaw('%s', new \mirolabs\phalcon\Framework\Container\Service('%s', [\n", 
+                $this->getServiceName(), $this->getServiceName());
         $result .= sprintf("\t\t\t'className' => '%s',\n", $this->className);
         return $result;
     }

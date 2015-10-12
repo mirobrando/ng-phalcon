@@ -2,96 +2,92 @@
 
 namespace mirolabs\phalcon\Framework;
 
-use mirolabs\phalcon\Framework\Compile\Parser;
-use mirolabs\phalcon\Framework\Services\Container\App;
-use mirolabs\phalcon\Framework\Services\Standard;
-use mirolabs\phalcon\Framework\Type\RegisterService;
 use Phalcon\Config\Adapter\Yaml;
-use Phalcon\DI\FactoryDefault;
+use mirolabs\phalcon\Framework\App\App;
+use mirolabs\phalcon\Framework\Compile\Parser;
+use mirolabs\phalcon\Framework\Compile\Check;
+use mirolabs\phalcon\Framework\Services\RegisterService;
 
-class Application extends \Phalcon\Mvc\Application
-{
+
+class Application {
+    
     const ENVIRONMENT_DEV = 'dev';
     const ENVIRONMENT_PROD = 'prod';
 
-
-    /**
-     * @var Yml
-     */
+    private $projectPath;
+    private $environment;
+    private $app;
     private $modules;
 
-    private $projectPath;
 
-    private $environment;
-
-    public function __construct($projectPath, $environment = self::ENVIRONMENT_DEV)
-    {
+    public function __construct(App $app, $projectPath, $environment = self::ENVIRONMENT_DEV) {
         $this->projectPath = $projectPath;
         $this->environment = $environment;
-        parent::__construct();
+        $this->app = $app;
     }
 
-    protected function createLogger()
-    {
+    public function main() {
+        $this->application->run();
+    }
+
+    public function run() {
+        try {
+            $di = $this->app->getDI();
+            $this->createLogger();
+            $this->loadModules();
+            $this->compileAnnotations($di);
+            $this->loadServices($di);
+            $this->app->execute();
+            Logger::getInstance()->debug("Stop request");
+        } catch (\Exception $e) {
+            Logger::getInstance()->criticalException($e);
+            $this->app->runException($e);
+        }
+    }
+    
+    
+    protected function createLogger() {
         Logger::$StartTime = microtime(true);
         Logger::$ConfigPath = $this->projectPath. '/config/config.yml';
         Logger::getInstance()->debug("Start request");
     }
     
-    protected function loadModules()
-    {
+    protected function loadModules() {
         $config = new Yaml($this->projectPath. '/config/modules.yml');
         $this->modules = $config->toArray();
-        $this->registerModules($this->modules);
+        $this->app->registerModules($this->modules);
         Logger::getInstance()->debug("Register modules");
     }
-
-    protected function compileAnnotations($di)
-    {
-        $parser = new Parser($this->projectPath, $this->modules, $di->get('annotations'));
-        
-        //todo check
-        $parser->execute();
-                
+    
+    protected function compileAnnotations($di) {
+        $check = new Check($this->projectPath, $this->getModulesPath(), $this->environment);
+        if ($check->isChangeConfiguration()) {
+            $parser = new Parser($this->projectPath, $this->modules, $di->get('annotations'));
+            $parser->execute();
+        }
         Logger::getInstance()->debug("Complied annotations");
     }
-
-
-    protected function loadServices()
-    {
+    
+    public function getModulesPath() {
+        $result = [];
+        foreach ($this->modules as $moduleName => $module) {
+            preg_match('/([A-Za-z\/-]+)Module\.php/', $module['path'], $matches);
+            $result[$moduleName] = $this->projectPath . $matches[1];
+        }
+        return $result;
+    }
+    
+    protected function loadServices($di) {
         $registerService = new RegisterService();
         $registerService
+            ->setDependencyInjection($di)
             ->setProjectPath($this->projectPath)
             ->setModules($this->modules)
-            ->setEnvironment($this->environment);
+            ->setEnvironment($this->environment)
+            ->setModulesPath($this->getModulesPath());
         
-        $app = new App();
-        $app->registerServices($registerService);
-        $this->setDI($registerService->getDependencyInjection());
+        $this->app->getContainer()->registerServices($registerService);
         Logger::getInstance()->debug("Loaded services");
     }
 
-    public function main()
-    {
-        try {
-            $di = new FactoryDefault();
-            $this->createLogger();
-            $this->loadModules();
-            $this->compileAnnotations($di);
-            $this->loadServices();
-            echo $this->handle()->getContent();
-            Logger::getInstance()->debug("Stop request");
-        } catch (Phalcon\Mvc\Dispatcher\Exception $e) {
-            Logger::getInstance()->criticalException($e);
-            $response = new \Phalcon\Http\Response();
-            $response->setStatusCode(400, 'Bad Request');
-            $response->send();
-        } catch (Phalcon\Exception $e) {
-            Logger::getInstance()->criticalException($e);
-        } catch (PDOException $e) {
-            Logger::getInstance()->criticalException($e);
-        } catch (\Exception $e) {
-            Logger::getInstance()->criticalException($e);
-        }
-    }
 }
