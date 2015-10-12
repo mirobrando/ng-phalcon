@@ -15,7 +15,7 @@ class Web extends PhalconApp implements App {
     
     private $di;
     
-    public function __construct($projectPath, $environment = self::ENVIRONMENT_DEV) {
+    public function __construct($projectPath, $environment = Application::ENVIRONMENT_DEV) {
         $this->application = new Application($this, $projectPath, $environment);
         parent::__construct();
     }

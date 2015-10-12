@@ -2,7 +2,6 @@
 
 namespace mirolabs\phalcon\Framework\Compile\Plugin;
 
-use Phalcon\Config;
 use mirolabs\collection\ArrayList;
 use mirolabs\phalcon\Framework\Compile\Plugin\Model\Listener as ModelListener;
 use mirolabs\phalcon\Framework\Compile\AnnotationParser as AnnotationParser;
@@ -30,7 +29,7 @@ class Listener implements \mirolabs\phalcon\Framework\Compile\Plugin
         return $this->config;
     }
 
-    public function setConfig(Config $config) {
+    public function setConfig(\Phalcon\Config $config) {
         $this->config = $config;
     }
     

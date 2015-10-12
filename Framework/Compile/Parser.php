@@ -3,7 +3,9 @@
 namespace mirolabs\phalcon\Framework\Compile;
 
 use Phalcon\Annotations\Adapter;
-use mirolabs\phalcon\Framework\Compile\Plugin;
+use mirolabs\phalcon\Framework\Compile\Plugin\Service;
+use mirolabs\phalcon\Framework\Compile\Plugin\Listener;
+use mirolabs\phalcon\Framework\Compile\Plugin\Route;
 use mirolabs\phalcon\Framework\Module;
 use Phalcon\Config\Adapter\Yaml;
 
@@ -54,9 +56,9 @@ class Parser {
         $this->config = new Yaml($projectPath . 'config/config.yml');
         $this->cacheDir = $projectPath . Module::COMMON_CACHE;
         $this->annotationAdapter = $annotationAdapter;
-        $this->addPlugin(new Plugin\Service());
-        $this->addPlugin(new Plugin\Listener());
-        $this->addPlugin(new Plugin\Route());
+        $this->addPlugin(new Service());
+        $this->addPlugin(new Listener());
+        $this->addPlugin(new Route());
     }
     
     public function execute() {
