@@ -30,6 +30,15 @@ class Application {
         $this->application->run();
     }
 
+    public function getProjectPath() {
+        return $this->projectPath;
+    }
+
+    public function getModules() {
+        return $this->modules;
+    }
+
+        
     public function run() {
         try {
             $di = $this->app->getDI();

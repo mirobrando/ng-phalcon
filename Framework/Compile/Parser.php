@@ -6,6 +6,7 @@ use Phalcon\Annotations\Adapter;
 use mirolabs\phalcon\Framework\Compile\Plugin\Service;
 use mirolabs\phalcon\Framework\Compile\Plugin\Listener;
 use mirolabs\phalcon\Framework\Compile\Plugin\Route;
+use mirolabs\phalcon\Framework\Compile\Plugin\Task;
 use mirolabs\phalcon\Framework\Module;
 use Phalcon\Config\Adapter\Yaml;
 
@@ -59,6 +60,7 @@ class Parser {
         $this->addPlugin(new Service());
         $this->addPlugin(new Listener());
         $this->addPlugin(new Route());
+        $this->addPlugin(new Task());
     }
     
     public function execute() {

@@ -30,6 +30,7 @@ class Console extends ConsoleApp implements App {
     
     public function main() {
         $this->di = new CliDI();
+        $this->setDI($this->di);
         $this->application->run();
     }
     
@@ -58,7 +59,8 @@ class Console extends ConsoleApp implements App {
 
         //$tasks = $this->getTaskList();
         $tasks = [];
-        $defaultCommands = new DefaultCommands($this->getDI(), $this->modules, $this->projectPath);
+        $defaultCommands = new DefaultCommands($this->getDI(), 
+                $this->application->getModules(), $this->application->getProjectPath());
         $defaultCommands->addTasks($tasks);
 
         if (count($this->args) < 2) {
@@ -70,6 +72,11 @@ class Console extends ConsoleApp implements App {
         return $this->getArgumentsFromTask($tasks[$this->args[1]]);
     }
     
-    
+    protected function getListTask($tasks) {
+        $data['task'] = 'mirolabs\phalcon\Task\CommandList';
+        $data['action'] = 'run';
+        $data['params'] = ['tasks' => $tasks];
+        return $data;
+    }
 
 }
