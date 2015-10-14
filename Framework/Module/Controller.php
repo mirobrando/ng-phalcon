@@ -48,6 +48,7 @@ class Controller extends PhalconController {
         
         if ($annotations->has(Service::PROPERTY_ANNOTATION)) {
             $annProperty = $annotations->get(Service::PROPERTY_ANNOTATION);
+            $serviceName = $annProperty->getArgument('service');
             if (!is_null($serviceName)) {
                 $this->$propertyName = $this->getDI()->get($serviceName);
             } else {
