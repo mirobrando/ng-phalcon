@@ -33,7 +33,7 @@ class Controller extends PhalconController {
         if ($annotations->has(Service::PROPERTY_ANNOTATION_VALUE)) {
             $valueName = $annotations->get(Service::PROPERTY_ANNOTATION_VALUE)->getArgument(0);
             if (!is_null($valueName)) {
-                $this->$propertyName = $this->getValue{$annotations->get($valueName);
+                $this->propertyName = $this->getValue($valueName);
             }
         } else {
             $this->setPropertyService($propertyName, $annotations);

@@ -61,24 +61,37 @@ class Parser {
         $this->addPlugin(new Listener());
         $this->addPlugin(new Route());
         $this->addPlugin(new Task());
+        $this->registerPlugins();
     }
     
+    private function registerPlugins() {
+        foreach ($this->modules as $module) {
+            $moduleClass = new $module['className'];
+            $this->addPlugins($moduleClass->getAnnotationPlugins());
+        }
+    }
+
     public function execute() {
         foreach ($this->getModulePaths() as $moduleName => $module) {
             $this->parseFolder($moduleName, $module['folder'], $module['namespace']);
         }
         $this->craeteCache();
     }
+
+    public function addPlugins($plugins) {
+        if (is_array($plugins)) {
+            foreach($plugins as $plugin) {
+                $this->addPlugin($plugin);
+            }
+        }
+    }
     
-    public function addPlugin(Plugin $plugin) 
-    {
+    public function addPlugin(Plugin $plugin) {
         $plugin->setConfig($this->config);
         $this->plugins[] = $plugin;
     }
 
-
-    private function getModulePaths()
-    {
+    private function getModulePaths() {
         $modulesPath = [];
         foreach ($this->modules as $moduleName => $module) {
             $matchesPath = null;
@@ -101,8 +114,7 @@ class Parser {
      * @param string $folder
      * @param string $namespace
      */
-    private function parseFolder($moduleName, $folder, $namespace)
-    {
+    private function parseFolder($moduleName, $folder, $namespace) {
         if ($dir = opendir($folder)) {
             while (($file = readdir($dir)) !== false) {
                 if (in_array($file, ['.', '..'])) {
@@ -124,8 +136,7 @@ class Parser {
      * @param string $filePath
      * @param string $namespace
      */
-    private function parseFile($moduleName, $filePath, $namespace)
-    {
+    private function parseFile($moduleName, $filePath, $namespace) {
         if (file_exists($filePath)) {
             if (strpos($filePath, '.php') !== strlen($filePath) - 4) {
                 return [];
@@ -137,15 +148,13 @@ class Parser {
         }
     }
     
-    private function callParseFile($className, $module)
-    {
+    private function callParseFile($className, $module) {
         foreach ($this->plugins as $plugin) {
             $plugin->parseFile($this->annotationAdapter, $className, $module);
         }
     }
     
-    private function craeteCache()
-    {
+    private function craeteCache() {
         foreach ($this->plugins as $plugin) {
             $plugin->createCache($this->cacheDir);
         }

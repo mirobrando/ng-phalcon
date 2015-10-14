@@ -55,6 +55,7 @@ class Console extends ConsoleApp implements App {
     public function setModules($modules) {
         parent::registerModules($modules);
     }
+    
     protected function getArguments() {
 
         //$tasks = $this->getTaskList();
@@ -76,6 +77,21 @@ class Console extends ConsoleApp implements App {
         $data['task'] = 'mirolabs\phalcon\Task\CommandList';
         $data['action'] = 'run';
         $data['params'] = ['tasks' => $tasks];
+        return $data;
+    }
+    
+    protected function getArgumentsFromTask($task) {
+        $data['task'] = $task['class'];
+        $data['action'] = $task['action'];
+        $data['params'] = [];
+        foreach ($task['params'] as $param) {
+            if ($param['type'] == 'service') {
+                $data['params'][] = $this->getDI()->get($param['name']);
+            } else {
+                $data['params'][] = $param['value'];
+            }
+        }
+
         return $data;
     }
 

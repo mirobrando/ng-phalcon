@@ -57,7 +57,7 @@ class DefaultCommands
     protected function setInstallResources(&$tasks)
     {
         $tasks['installResources'] = [
-            'class' => 'mirolabs\phalcon\Framework\Tasks\InstallResources',
+            'class' => 'mirolabs\phalcon\Task\InstallResources',
             'action' => 'run',
             'description' => 'create symlink for resources of modules',
             'params' => [

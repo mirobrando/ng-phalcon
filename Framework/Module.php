@@ -48,4 +48,8 @@ abstract class Module implements ModuleDefinitionInterface
     {
         return new RegisterView(new \Phalcon\Mvc\View(), $dependencyInjection);
     }
+    
+    public function getAnnotationPlugins() {
+        return [];
+    }
 }
