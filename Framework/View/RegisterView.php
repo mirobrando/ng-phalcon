@@ -6,6 +6,7 @@ namespace mirolabs\phalcon\Framework\View;
 use mirolabs\phalcon\Framework\Map;
 use Phalcon\DI;
 use Phalcon\Mvc\View as PhalconView;
+use Phalcon\Mvc\View\Engine\Volt as PhalconVolt;
 
 class RegisterView
 {
@@ -15,7 +16,7 @@ class RegisterView
     private $dependencyInjection;
 
     /**
-     * @var View
+     * @var PhalconView
      */
     private $view;
 
@@ -23,7 +24,7 @@ class RegisterView
      * @param View $view
      * @param DI $dependencyInjection
      */
-    public function __construct($view, DI $dependencyInjection)
+    public function __construct(PhalconView $view, DI $dependencyInjection)
     {
         $this->dependencyInjection = $dependencyInjection;
         $this->view = $view;
@@ -49,7 +50,7 @@ class RegisterView
      */
     protected function getVolt() {
         $config = $this->getConfig();
-        $volt = new Volt($this->view, $this->dependencyInjection);
+        $volt = new PhalconVolt($this->view, $this->dependencyInjection);
         $volt->setOptions([
             'compiledPath'      => $config->view->compiledPath,
             'compiledSeparator' => $config->view->compiledSeparator,
