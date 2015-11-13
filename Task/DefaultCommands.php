@@ -45,7 +45,7 @@ class DefaultCommands
     protected function setShowRoute(&$tasks)
     {
         $tasks['showRoute'] = [
-            'class' => 'mirolabs\phalcon\Framework\ShowRoute',
+            'class' => 'mirolabs\phalcon\Task\ShowRoute',
             'action' => 'run',
             'description' => 'show of route in project',
             'params' => [
