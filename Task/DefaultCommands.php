@@ -42,6 +42,20 @@ class DefaultCommands
         }
     }
 
+    protected function setShowRoute(&$tasks)
+    {
+        $tasks['showRoute'] = [
+            'class' => 'mirolabs\phalcon\Framework\ShowRoute',
+            'action' => 'run',
+            'description' => 'show of route in project',
+            'params' => [
+                ['type' => 'parameter', 'value' => $this->projectPath]
+            ]
+        ];
+    }
+
+
+
     protected function setCreateModule(&$tasks)
     {
         $tasks['createModule'] = [

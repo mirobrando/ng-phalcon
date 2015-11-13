@@ -75,6 +75,11 @@ class Application
         }
     }
 
+    public function getModules()
+    {
+        return $this->modules;
+    }
+
     protected function createLogger()
     {
         Logger::$StartTime  = microtime(true);
