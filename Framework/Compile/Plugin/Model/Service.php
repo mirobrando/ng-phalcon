@@ -14,13 +14,13 @@ class Service {
      *
      * @var AnnotationParser
      */
-    protected $annotationParser;
+    private $annotationParser;
     
     /**
      *
      * @var string
      */
-    protected $className;
+    private $className;
 
 
     /**
@@ -56,7 +56,7 @@ class Service {
         $annotation = $this->annotationParser->getExistsAnnotationClass(PluginService::CLASS_ANNOTATION);
         $serviceName = $annotation->getArgument(0); 
         if (is_null($serviceName)) {
-            $serviceName = str_replace('\\', '.', strtolower($this->className));
+            $serviceName = str_replace('\\', '.', $this->className);
         }
         return $serviceName;
     }

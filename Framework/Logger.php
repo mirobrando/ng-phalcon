@@ -9,7 +9,7 @@ use Phalcon\Logger\Adapter\Stream as StreamAdapter;
 use Phalcon\Logger\Adapter\Syslog as SyslogAdapter;
 use Phalcon\Logger\Adapter\Firephp as Firephp;
 
-class Logger 
+class Logger
 {
     /**
      * @var Logger
@@ -17,17 +17,17 @@ class Logger
     private static $Instance;
     public static $ConfigPath;
     public static $StartTime;
-    
+
     /**
      * @var MultipleStream 
      */
     private $logger;
-    
+
     private function __construct()
     {
-        $config = new Yaml(self::$ConfigPath);
+        $config       = new Yaml(self::$ConfigPath);
         $this->logger = new MultipleStream();
-        
+
         //info
         $level = 6;
         if ($config->offsetExists('logger') && $config->get('logger')->offsetExists('level')) {
@@ -50,13 +50,13 @@ class Logger
             $this->logger->push(new FileAdapter('/tmp/ngApp.log'));
             $this->logger->push(new StreamAdapter('php://stdout'));
         }
-        
+
         foreach ($this->logger->getLoggers() as $logger) {
             $logger->setLogLevel($level);
         }
     }
-     
-    private function getAdapter($adapter, $param) 
+
+    private function getAdapter($adapter, $param)
     {
         switch (strtolower($adapter)) {
             case 'file':
@@ -64,22 +64,19 @@ class Logger
             case 'stream':
                 return new StreamAdapter($param);
             case 'syslog':
-                if(is_array($param) && array_key_exists('name', $param) && array_key_exists('options', $param)) {
+                if (is_array($param) && array_key_exists('name', $param) && array_key_exists('options', $param)) {
                     return new SyslogAdapter($param['name'], $param['options']);
-                } 
+                }
                 return new SyslogAdapter(null);
             case 'firephp':
                 return new Firephp("");
         }
-        
-        echo 'Logger adapter not exist: ' . $adapter . '<br>';
+
+        echo 'Logger adapter not exist: '.$adapter.'<br>';
         echo "Available adapters: file, stream, syslog, firephp";
-        
+
         exit;
     }
-
-
-
 
     /**
      * @return Logger
@@ -89,65 +86,64 @@ class Logger
         if (self::$Instance == null) {
             self::$Instance = new Logger();
         }
-        
-        return self::$Instance; 
+
+        return self::$Instance;
     }
-    
 
-
-    
     public function critical()
     {
-        $this->logger->critical($this->getMessage(func_get_args()));        
-    }    
+        $this->logger->critical($this->getMessage(func_get_args()));
+    }
+
     public function emergency()
     {
-        $this->logger->emergency($this->getMessage(func_get_args()));        
-    }    
+        $this->logger->emergency($this->getMessage(func_get_args()));
+    }
+
     public function debug()
     {
         $this->logger->debug($this->getMessage(func_get_args()));
     }
+
     public function error()
     {
-        $this->logger->error($this->getMessage(func_get_args()));        
-    }    
+        $this->logger->error($this->getMessage(func_get_args()));
+    }
+
     public function info()
     {
-        $this->logger->info($this->getMessage(func_get_args()));        
-    }    
+        $this->logger->info($this->getMessage(func_get_args()));
+    }
+
     public function notice()
     {
-        $this->logger->notice($this->getMessage(func_get_args()));        
-    }    
+        $this->logger->notice($this->getMessage(func_get_args()));
+    }
+
     public function warning()
     {
-        $this->logger->warning($this->getMessage(func_get_args()));        
+        $this->logger->warning($this->getMessage(func_get_args()));
     }
+
     public function alert()
     {
-        $this->logger->alert($this->getMessage(func_get_args()));        
-    }    
+        $this->logger->alert($this->getMessage(func_get_args()));
+    }
+
     public function criticalException(\Exception $exp)
     {
-        $message = sprintf("%s\n%s(%d)\n%s",
-                $exp->getMessage(),
-                $exp->getFile(),
-                $exp->getLine(),
-                $exp->getTraceAsString());
-        $this->logger->critical($message);        
-    }  
-    
+        $message = sprintf("%s\n%s(%d)\n%s", $exp->getMessage(), $exp->getFile(), $exp->getLine(),
+            $exp->getTraceAsString());
+        $this->logger->critical($message);
+    }
+
     public function exception(\Exception $exp)
     {
-        $message = sprintf("%s\n%s(%d)\n%s",
-                $exp->getMessage(),
-                $exp->getFile(),
-                $exp->getLine(),
-                $exp->getTraceAsString());
-        $this->logger->exception($message);        
-    }  
-    
+        $message = sprintf("%s\n%s(%d)\n%s", $exp->getMessage(), $exp->getFile(), $exp->getLine(),
+            $exp->getTraceAsString());
+        $this->logger->exception($message);
+    }
+
     /**
      * @param array $params
      * @return string
@@ -157,10 +153,9 @@ class Logger
         $message = "EMPTY MESSAGE";
         if (count($params) > 0) {
             $messagePattern = array_shift($params);
-            $message = vsprintf($messagePattern, $params);
+            $message        = vsprintf($messagePattern, $params);
         }
 
         return sprintf("%s m[%.6f]", $message, microtime(true) - self::$StartTime);
     }
-    
 }

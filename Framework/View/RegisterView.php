@@ -34,18 +34,20 @@ class RegisterView
      * @param string $modulePath
      */
     public function register($moduleName, $modulePath) {
+        $pPath = $this->dependencyInjection->get('config')->projectPath;
+        $pDir = substr($pPath,0,strlen($pPath)-10);
+        $relModulePath = substr($modulePath, strlen($pDir));
+        $x = implode('/', array_map(function() {return '..';}, explode('/', str_replace('//','/', $relModulePath))));
+        $this->view->setMainView('/../'. $x . '/common/views/index');
         $this->view->setViewsDir($modulePath . '/views/');
         $this->view->registerEngines([".volt" => $this->getVolt()]);
-        $this->view->setLayoutsDir('/../common/views');
-        $this->view->setRenderLevel(PhalconView::LEVEL_ACTION_VIEW);
         $this->dependencyInjection->set('view', $this->view);
     }
 
     /**
      * @return Volt
      */
-    protected function getVolt()
-    {
+    protected function getVolt() {
         $config = $this->getConfig();
         $volt = new Volt($this->view, $this->dependencyInjection);
         $volt->setOptions([
@@ -65,8 +67,7 @@ class RegisterView
      * @SuppressWarnings(PHPMD.UnusedLocalVariable)
      * @param Volt $volt
      */
-    protected function createVoltFunctions($volt)
-    {
+    protected function createVoltFunctions($volt) {
         $dependencyInjection = $this->dependencyInjection;
         $volt->getCompiler()->addFunction('lang', function () use ($dependencyInjection) {
             return '$this->translation->getLang()';
@@ -92,8 +93,7 @@ class RegisterView
      * @SuppressWarnings(PHPMD.UnusedLocalVariable)
      * @param Volt $volt
      */
-    protected function createVoltFilters($volt)
-    {
+    protected function createVoltFilters($volt) {
         $volt->getCompiler()->addFilter('araw', function ($resolvedArgs, $exprArgs) {
             return 'html_entity_decode(' . $resolvedArgs . ')';
         });
@@ -113,8 +113,7 @@ class RegisterView
 
     /**
      */
-    protected function createVoltVars()
-    {
+    protected function createVoltVars() {
         $config = $this->getConfig();
         $this->view->setVar('ngAppName', $config->get('ng.app.name'));
     }
@@ -122,8 +121,7 @@ class RegisterView
     /**
      * @return Map
      */
-    protected function getConfig()
-    {
+    protected function getConfig() {
         return $this->dependencyInjection->get('config');
     }
 }

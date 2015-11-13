@@ -2,7 +2,6 @@
 
 namespace mirolabs\phalcon\Framework\Compile;
 
-
 use mirolabs\phalcon\Framework\Application;
 use mirolabs\phalcon\Framework\Module;
 use mirolabs\phalcon\Framework\Logger;
@@ -55,7 +54,6 @@ class Check
         return $result;
     }
 
-
     /**
      * @return bool
      */
@@ -65,9 +63,9 @@ class Check
         if ($this->environment != Application::ENVIRONMENT_PROD) {
             $data = $this->loadCache();
 
-            
-            $result =   $this->isChangedFile($this->projectPath . Module::CONFIG, $data) ||
-                        $this->isChangedModule($this->modulesPath, $data);
+
+            $result = $this->isChangedFile($this->projectPath.Module::CONFIG, $data) ||
+                $this->isChangedModule($this->modulesPath, $data);
         }
         return $result;
     }
@@ -84,8 +82,8 @@ class Check
         }
 
         $modulePath = array_pop($modules);
-        $result = false;
-        if (strpos($modulePath, $this->projectPath . 'vendor') !== 0) {
+        $result     = false;
+        if (strpos($modulePath, $this->projectPath.'vendor') !== 0) {
             $result = $this->isChangedFilesInFolder($modulePath, $data);
         }
         return $result || $this->isChangedModule($modules, $data);
@@ -94,12 +92,12 @@ class Check
     private function isChangedFilesInFolder($folder, array $data)
     {
         $result = false;
-        if ($dir = opendir($folder)) {
+        if ($dir    = opendir($folder)) {
             while (($file = readdir($dir)) !== false) {
                 if (in_array($file, ['.', '..'])) {
                     continue;
                 }
-                $result |= $this->isChangedFile($folder . $file, $data);
+                $result |= $this->isChangedFile($folder.$file, $data);
             }
             closedir($dir);
             $result = !$result;
@@ -117,7 +115,7 @@ class Check
         if (file_exists($filePath)) {
             if (is_dir($filePath)) {
                 return $this->isChangedFilesInFolder($filePath, $data);
-            } 
+            }
             if (strpos($filePath, '.php') !== strlen($filePath) - 4) {
                 return true;
             }
@@ -127,13 +125,12 @@ class Check
         return false;
     }
 
-    
     /**
      * @return string
      */
     private function getFileLog()
     {
-        return $this->projectPath . Module::COMMON_CACHE . '/' . self::CACHE_FILE;
+        return $this->projectPath.Module::COMMON_CACHE.'/'.self::CACHE_FILE;
     }
 
     /**
@@ -147,6 +144,7 @@ class Check
                 $result = unserialize(file_get_contents($this->getFileLog()));
             }
         } catch (\Exception $e) {
+
         }
         return $result;
     }
@@ -160,6 +158,7 @@ class Check
             @file_put_contents($this->getFileLog(), serialize($data));
             @chmod($this->getFileLog(), 0777);
         } catch (\Exception $e) {
+
         }
     }
 
@@ -168,8 +167,8 @@ class Check
      */
     private function createNewCache()
     {
-        $data = $this->createCacheForModule($this->modulesPath);
-        $data[$this->projectPath . Module::CONFIG] = filemtime($this->projectPath . Module::CONFIG);
+        $data                                      = $this->createCacheForModule($this->modulesPath);
+        $data[$this->projectPath.Module::CONFIG] = filemtime($this->projectPath.Module::CONFIG);
 
         return $data;
     }
@@ -183,12 +182,10 @@ class Check
         $modulePath = array_pop($modules);
 
         return array_merge(
-            $this->createCacheForFile($modulePath . Module::SERVICE),
-            $this->createCacheForFile($modulePath . 'services/'),
-            $this->createCacheForModule($modules)
+            $this->createCacheForFile($modulePath.Module::SERVICE),
+            $this->createCacheForFile($modulePath.'services/'), $this->createCacheForModule($modules)
         );
     }
-
 
     /**
      * @param $folder
@@ -197,12 +194,12 @@ class Check
     private function createCacheForFolder($folder)
     {
         $result = [];
-        if ($dir = opendir($folder)) {
+        if ($dir    = opendir($folder)) {
             while (($file = readdir($dir)) !== false) {
                 if (in_array($file, ['.', '..'])) {
                     continue;
                 }
-                $result = array_merge($result, $this->createCacheForFile($folder . $file));
+                $result = array_merge($result, $this->createCacheForFile($folder.$file));
             }
             closedir($dir);
         }
@@ -221,7 +218,7 @@ class Check
             }
             if (strpos($filePath, '.php') !== strlen($filePath) - 4) {
                 return [];
-            }            
+            }
             return [$filePath => filemtime($filePath)];
         }
 
