@@ -1,10 +1,10 @@
 <?php
 
-namespace mirolabs\phalcon\Framework\Tasks\Module;
+namespace mirolabs\phalcon\Task\Module;
 
-use mirolabs\phalcon\Framework\Tasks\ClassBuilder;
-use mirolabs\phalcon\Framework\Tasks\FileBuilder;
-use mirolabs\phalcon\Framework\Tasks\Module;
+use mirolabs\phalcon\Task\Module;
+use mirolabs\phalcon\Task\Builder\ClassBuilder;
+use mirolabs\phalcon\Task\Builder\FileBuilder;
 
 class CreateControllerTask extends Module
 {
@@ -34,12 +34,12 @@ class CreateControllerTask extends Module
             ->createPhpFile()
             ->createNamespace(sprintf("%s\\controllers", $moduleName))
             ->createUses(['mirolabs\phalcon\Framework\Module\Controller'])
-            ->createClass(ucfirst($controllerName). 'Controller', 'Controller');
-
+            ->createClass(ucfirst($controllerName). 'Controller', 'Controller',[], ['@Controller']);
 
         foreach ($actions as $actionName => $route) {
-            $classBuilder->addMethod($actionName . 'Action', [], []);
-            $this->addRoute($this->getRoutePath($projectPath, $moduleName), $route, $controllerName, $actionName);
+            $annotationRoute = sprintf("@Route(path='%s', method=GET)", $route);
+            $classBuilder->addMethod($actionName . 'Action', [], [], 'void', 'public', [$annotationRoute]);
+            //$this->addRoute($this->getRoutePath($projectPath, $moduleName), $route, $controllerName, $actionName);
             $this->addView($projectPath, $moduleName, $controllerName, $actionName);
         }
         $classBuilder->closeClass();
@@ -70,7 +70,7 @@ class CreateControllerTask extends Module
         $viewPath =
             $this->getModulePath($projectPath, $moduleName)
             . '/views/' . mb_strtolower($controllerName, 'UTF-8') . '/' . $actionName .'.volt';
-        file_put_contents($viewPath, '{% extends "index.volt" %}');
+        file_put_contents($viewPath, '<p>new Action view</p>');
     }
 
 

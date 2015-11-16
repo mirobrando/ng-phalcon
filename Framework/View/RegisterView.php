@@ -40,6 +40,7 @@ class RegisterView
         $relModulePath = substr($modulePath, strlen($pDir));
         $x = implode('/', array_map(function() {return '..';}, explode('/', str_replace('//','/', $relModulePath))));
         $this->view->setMainView('/../'. $x . '/common/views/index');
+        $this->view->setPartialsDir('/../'. $x . '/common/views/partial/');
         $this->view->setViewsDir($modulePath . '/views/');
         $this->view->registerEngines([".volt" => $this->getVolt()]);
         $this->dependencyInjection->set('view', $this->view);

@@ -54,12 +54,10 @@ class DefaultCommands
         ];
     }
 
-
-
     protected function setCreateModule(&$tasks)
     {
         $tasks['createModule'] = [
-            'class' => 'mirolabs\phalcon\Framework\Tasks\CreateModule',
+            'class' => 'mirolabs\phalcon\Task\CreateModule',
             'action' => 'run',
             'description' => 'create module in project',
             'params' => [
@@ -67,6 +65,21 @@ class DefaultCommands
             ]
         ];
     }
+
+    protected function setCreateController(&$tasks)
+    {
+        $tasks['createController'] = [
+            'class' => 'mirolabs\phalcon\Task\Module\CreateController',
+            'action' => 'run',
+            'description' => 'create controller in project',
+            'params' => [
+                ['type' => 'parameter', 'value' => $this->projectPath],
+            ]
+        ];
+    }
+
+
+
 
     protected function setInstallResources(&$tasks)
     {
@@ -82,17 +95,7 @@ class DefaultCommands
     }
 
 
-    protected function setCreateController(&$tasks)
-    {
-        $tasks['createController'] = [
-            'class' => 'mirolabs\phalcon\Framework\Tasks\Module\CreateController',
-            'action' => 'run',
-            'description' => 'create controller in project',
-            'params' => [
-                ['type' => 'parameter', 'value' => $this->projectPath],
-            ]
-        ];
-    }
+
 
     protected function setCreateModelFromDB(&$tasks)
     {
