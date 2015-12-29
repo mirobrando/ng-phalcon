@@ -8,4 +8,5 @@ interface App {
     function getDI();
     function execute();
     function getContainer();
+    function getUri();
 }

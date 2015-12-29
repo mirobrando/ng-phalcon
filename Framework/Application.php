@@ -69,8 +69,10 @@ class Application
             $this->loadServices($di);
             $this->app->execute();
             Logger::getInstance()->debug("Stop request");
+            Logger::getInstance()->commit();
         } catch (\Exception $e) {
             Logger::getInstance()->criticalException($e);
+            Logger::getInstance()->commit();
             $this->app->runException($e);
         }
     }
@@ -84,7 +86,8 @@ class Application
     {
         Logger::$StartTime  = microtime(true);
         Logger::$ConfigPath = $this->projectPath.'/config/config.yml';
-        Logger::getInstance()->debug("Start request");
+        Logger::getInstance()->begin();
+        Logger::getInstance()->debug("Start request ". $this->app->getUri());
     }
 
     protected function loadModules()

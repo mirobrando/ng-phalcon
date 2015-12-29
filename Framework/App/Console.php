@@ -103,4 +103,8 @@ class Console extends ConsoleApp implements App
 
         return $data;
     }
+
+    public function getUri() {
+        return 'console';
+    }
 }

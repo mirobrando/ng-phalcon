@@ -48,4 +48,7 @@ class Web extends PhalconApp implements App {
         return new WebContainer();
     }
 
+    public function getUri() {
+        return $_SERVER['REQUEST_URI'];
+    }
 }

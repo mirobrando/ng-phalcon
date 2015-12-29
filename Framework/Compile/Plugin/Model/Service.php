@@ -14,7 +14,7 @@ class Service {
      *
      * @var AnnotationParser
      */
-    private $annotationParser;
+    protected $annotationParser;
     
     /**
      *

@@ -8,6 +8,7 @@ use Phalcon\Logger\Adapter\File as FileAdapter;
 use Phalcon\Logger\Adapter\Stream as StreamAdapter;
 use Phalcon\Logger\Adapter\Syslog as SyslogAdapter;
 use Phalcon\Logger\Adapter\Firephp as Firephp;
+use Phalcon\Logger\Adapter as Adapter;
 
 class Logger
 {
@@ -90,6 +91,27 @@ class Logger
         return self::$Instance;
     }
 
+
+    public function begin()
+    {
+        $loggers = $this->logger->getLoggers();
+        array_walk($loggers, [$this, 'beginAdapter']);
+    }
+
+    public function commit()
+    {
+        $loggers = $this->logger->getLoggers();
+        array_walk($loggers, [$this, 'commitAdapter']);
+
+    }
+
+    public function rollback()
+    {
+        $loggers = $this->logger->getLoggers();
+        array_walk($loggers, [$this, 'rolbackAdapter']);
+    }
+
+
     public function critical()
     {
         $this->logger->critical($this->getMessage(func_get_args()));
@@ -157,5 +179,26 @@ class Logger
         }
 
         return sprintf("%s m[%.6f]", $message, microtime(true) - self::$StartTime);
+    }
+
+    private function beginAdapter($adapter)
+    {
+        if ($adapter instanceof Adapter) {
+            $adapter->begin();
+        }
+    }
+
+    private function commitAdapter($adapter)
+    {
+        if ($adapter instanceof Adapter) {
+            $adapter->commit();
+        }
+    }
+
+    private function rollbackAdapter($adapter)
+    {
+        if ($adapter instanceof Adapter) {
+            $adapter->rollback();
+        }
     }
 }
