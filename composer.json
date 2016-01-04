@@ -8,15 +8,19 @@
     ],
     "autoload": {
         "psr-4": {
-            "mirolabs\\phalcon\\Framework\\": "Framework/"
+            "mirolabs\\phalcon\\Framework\\": "Framework/",
+            "mirolabs\\phalcon\\Setup\\": "Setup/",
+            "mirolabs\\phalcon\\Task\\": "Task/"
         }
     },
     "minimum-stability": "dev",
     "require": {
         "php": ">=5.4",
         "ext-phalcon": ">=1.2.4",
+        "ext-yaml": ">=1.2",        
         "symfony/yaml": "2.*",
-        "mirolabs/console-reader": "dev-master"
+        "mirolabs/console-reader": "dev-master",
+        "mirolabs/collection": "dev-master"
     },
     "require-dev": {
         "phpunit/phpunit": "4.3.*",

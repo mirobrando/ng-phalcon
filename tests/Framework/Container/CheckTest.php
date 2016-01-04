@@ -99,6 +99,8 @@ class CheckTest extends \UnitTestCase
         $this->assertFalse($check->isChangeConfiguration());
     }
 
+    
+    
     private function updateFile($filePath)
     {
         $data = file_get_contents($this->projectPath . Module::COMMON_CACHE . '/' . Check::CACHE_FILE);

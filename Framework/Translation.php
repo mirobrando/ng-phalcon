@@ -30,7 +30,6 @@ class Translation
         if (!is_array($translations)) {
             $translations = [];
         }
-        
         $translationsModule = $this->getMessages($modules[$dispatcher->getModuleName()]);
         if (!is_array($translationsModule)) {
             $translationsModule = [];

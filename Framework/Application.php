@@ -2,68 +2,130 @@
 
 namespace mirolabs\phalcon\Framework;
 
+use Phalcon\Config\Adapter\Yaml;
+use mirolabs\phalcon\Framework\App\App;
+use mirolabs\phalcon\Framework\Compile\Parser;
+use mirolabs\phalcon\Framework\Compile\Check;
+use mirolabs\phalcon\Framework\Services\RegisterService;
 
-use mirolabs\phalcon\Framework\Services\Container\App;
-use mirolabs\phalcon\Framework\Services\Standard;
-use mirolabs\phalcon\Framework\Type\RegisterService;
-use Symfony\Component\Yaml\Yaml;
-
-class Application extends \Phalcon\Mvc\Application
+class Application
 {
-    const ENVIRONMENT_DEV = 'dev';
+    const ENVIRONMENT_DEV  = 'dev';
     const ENVIRONMENT_PROD = 'prod';
 
+    /**
+     * @var string
+     */
+    private $projectPath;
 
     /**
-     * @var Yml
+     * @var string
+     */
+    private $environment;
+
+    /**
+     * @var App
+     */
+    private $app;
+
+    /**
+     * @var array
      */
     private $modules;
 
-    private $projectPath;
+    /**
+     * @var Check
+     */
+    private $check;
 
-    private $environment;
+    /**
+     * @var RegisterService
+     */
+    private $registerService;
 
-    public function __construct($projectPath, $environment = self::ENVIRONMENT_DEV)
+    /**
+     * @param App $app
+     * @param string $projectPath
+     * @param string $environment
+     */
+    public function __construct(App $app, $projectPath, $environment = self::ENVIRONMENT_DEV)
     {
-        $this->projectPath = $projectPath;
-        $this->environment = $environment;
-        parent::__construct();
+        $this->projectPath     = $projectPath;
+        $this->environment     = $environment;
+        $this->app             = $app;
+        $yml                   = new Yaml($this->projectPath.'/config/modules.yml');
+        $this->modules         = $yml->toArray();
+        $this->check           = new Check($this->projectPath, $this->getModulesPath(), $this->environment);
+        $this->registerService = new RegisterService();
+    }
+
+    public function run()
+    {
+        try {
+            $di = $this->app->getDI();
+            $this->createLogger();
+            $this->loadModules();
+            $this->compileAnnotations($di);
+            $this->loadServices($di);
+            $this->app->execute();
+            Logger::getInstance()->debug("Stop request");
+            Logger::getInstance()->commit();
+        } catch (\Exception $e) {
+            Logger::getInstance()->criticalException($e);
+            Logger::getInstance()->commit();
+            $this->app->runException($e);
+        }
+    }
+
+    public function getModules()
+    {
+        return $this->modules;
+    }
+
+    protected function createLogger()
+    {
+        Logger::$StartTime  = microtime(true);
+        Logger::$ConfigPath = $this->projectPath.'/config/config.yml';
+        Logger::$Console = $this->app->isConsole();
+        Logger::getInstance()->begin();
+        Logger::getInstance()->debug("Start request ". $this->app->getUri());
     }
 
     protected function loadModules()
     {
-        $this->modules = Yaml::parse(file_get_contents($this->projectPath. '/config/modules.yml'));
-        $this->registerModules($this->modules);
+        $this->app->registerModules($this->modules);
+        Logger::getInstance()->debug("Register modules");
     }
 
-    protected function loadServices()
+    protected function compileAnnotations($di)
     {
-        $registerService = new RegisterService();
-        $registerService
+        if ($this->check->isChangeConfiguration()) {
+            $parser = new Parser($this->projectPath, $this->modules, $di->get('annotations'));
+            $parser->execute();
+        }
+        Logger::getInstance()->debug("Complied annotations");
+    }
+
+    protected function loadServices($di)
+    {
+        $this->registerService
+            ->setDependencyInjection($di)
             ->setProjectPath($this->projectPath)
             ->setModules($this->modules)
-            ->setEnvironment($this->environment);
+            ->setEnvironment($this->environment)
+            ->setModulesPath($this->getModulesPath());
 
-        $app = new App();
-        $app->registerServices($registerService);
-        $this->setDI($registerService->getDependencyInjection());
+        $this->app->getContainer()->registerServices($this->registerService);
+        Logger::getInstance()->debug("Loaded services");
     }
 
-    public function main()
+    protected function getModulesPath()
     {
-        try {
-            $this->loadModules();
-            $this->loadServices();
-            echo $this->handle()->getContent();
-        } catch (Phalcon\Mvc\Dispatcher\Exception $e) {
-            $response = new \Phalcon\Http\Response();
-            $response->setStatusCode(400, 'Bad Request');
-            $response->send();
-        } catch (Phalcon\Exception $e) {
-            echo $e->getMessage();
-        } catch (PDOException $e) {
-            echo $e->getMessage();
+        $result = [];
+        foreach ($this->modules as $moduleName => $module) {
+            preg_match('/([A-Za-z\/-]+)Module\.php/', $module['path'], $matches);
+            $result[$moduleName] = $this->projectPath.$matches[1];
         }
-
+        return $result;
     }
 }

@@ -3,7 +3,7 @@
 namespace mirolabs\phalcon\Framework;
 
 use mirolabs\phalcon\Framework\View\RegisterView;
-use mirolabs\phalcon\Framework\View\View;
+//use mirolabs\phalcon\Framework\View\View;
 use Phalcon\Mvc\ModuleDefinitionInterface;
 use Phalcon\DiInterface;
 
@@ -46,6 +46,10 @@ abstract class Module implements ModuleDefinitionInterface
      */
     protected function getRegisterView($dependencyInjection)
     {
-        return new RegisterView(new View(), $dependencyInjection);
+        return new RegisterView(new \Phalcon\Mvc\View(), $dependencyInjection);
+    }
+    
+    public function getAnnotationPlugins() {
+        return [];
     }
 }

@@ -19,18 +19,13 @@ class Load
     /**
      * @param string $cacheDir
      */
-    public function __construct($cacheDir)
-    {
+    public function __construct($cacheDir) {
         $this->cacheDir = $cacheDir;
     }
 
-    /**
-     * @param DiInterface $dependencyInjection
-     */
-    public function execute($dependencyInjection)
-    {
-        require_once $this->cacheDir . '/' . Parser::CACHE_CONTAINER;
-        _loadConfig($dependencyInjection);
-        _loadServices($dependencyInjection);
+
+    public function execute($file, \Closure $cl) {
+        require $this->cacheDir . $file;
+        return $cl();
     }
 }

@@ -1,3 +1,11 @@
 .idea
+
+ng-phalcon.phpproj
+ng-phalcon.sln
+ng-phalcon.v12.suo
+nbproject
+
+composer.phar
 vendor
 composer.lock
+/nbproject/private/
