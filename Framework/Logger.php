@@ -18,6 +18,7 @@ class Logger
     private static $Instance;
     public static $ConfigPath;
     public static $StartTime;
+    public static $Console = false;
 
     /**
      * @var MultipleStream 
@@ -39,12 +40,16 @@ class Logger
 
     private function loadAdapters(Yaml $config, $level)
     {
-        if ($config->offsetExists('logger') && $config->get('logger')->offsetExists('adapters')) {
-            $adapters = $config->get('logger')->get('adapters');
-            if (!is_null($adapters)) {
-                foreach ($adapters->toArray() as $adapter => $param) {
-                    $this->logger->push($this->getAdapter($adapter, $param));
-                }
+        if (self::$Console) {
+            $adapters = $this->getAdaptersConsole($config);
+        } else {
+            $adapters = $this->getAdaptersWeb($config);
+        }
+
+
+        if ($adapters) {
+            foreach ($adapters->toArray() as $adapter => $param) {
+                $this->logger->push($this->getAdapter($adapter, $param));
             }
         } else {
             //dafault adapters
@@ -56,6 +61,27 @@ class Logger
             $logger->setLogLevel($level);
         }
     }
+
+    private function getAdaptersConsole(Yaml $config)
+    {
+        if ($config->offsetExists('logger') && $config->get('logger')->offsetExists('web') &&
+            $config->get('logger')->get('console')->offsetExists('adapters')) {
+            return $config->get('logger')->get('console')->get('adapters');
+        }
+        return null;
+
+    }
+
+    private function getAdaptersWeb(Yaml $config)
+    {
+        if ($config->offsetExists('logger') && $config->get('logger')->offsetExists('web') &&
+            $config->get('logger')->get('web')->offsetExists('adapters')) {
+            return $config->get('logger')->get('web')->get('adapters');
+        }
+        return null;
+    }
+
+
 
     private function getAdapter($adapter, $param)
     {

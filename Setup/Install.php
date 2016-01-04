@@ -1,13 +1,9 @@
 <?php
 
-namespace mirolabs\phalcon\Framework;
-
-use mirolabs\phalcon\Framework\Install\CreateController;
-use mirolabs\phalcon\Framework\Install\CreateFolders;
+namespace mirolabs\phalcon\Setup;
 
 class Install
 {
-
     public static function createProject()
     {
         CreateFolders::execute();

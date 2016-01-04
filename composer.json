@@ -9,7 +9,7 @@
     "autoload": {
         "psr-4": {
             "mirolabs\\phalcon\\Framework\\": "Framework/",
-            "mirolabs\\phalcon\\Install\\": "Install/",
+            "mirolabs\\phalcon\\Setup\\": "Setup/",
             "mirolabs\\phalcon\\Task\\": "Task/"
         }
     },

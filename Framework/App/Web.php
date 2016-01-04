@@ -19,6 +19,11 @@ class Web extends PhalconApp implements App {
         $this->application = new Application($this, $projectPath, $environment);
         parent::__construct();
     }
+
+    public function isConsole()
+    {
+        return false;
+    }
     
     public function main() {
         $this->di = new FactoryDefault();

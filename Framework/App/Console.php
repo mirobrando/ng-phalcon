@@ -30,6 +30,11 @@ class Console extends ConsoleApp implements App
         parent::__construct();
     }
 
+    public function isConsole()
+    {
+        return true;
+    }
+
     public function main()
     {
         $this->di = new CliDI();

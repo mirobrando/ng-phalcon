@@ -86,6 +86,7 @@ class Application
     {
         Logger::$StartTime  = microtime(true);
         Logger::$ConfigPath = $this->projectPath.'/config/config.yml';
+        Logger::$Console = $this->app->isConsole();
         Logger::getInstance()->begin();
         Logger::getInstance()->debug("Start request ". $this->app->getUri());
     }
